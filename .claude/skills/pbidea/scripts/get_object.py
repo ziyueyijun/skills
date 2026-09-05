@@ -12,12 +12,21 @@ Usage:
 - name : object name, substring match (e.g. "uo_json", "uo_datawindowex")
 - pbl  : optional library filter if several libraries contain the name
 
-Run from the skill directory. Use PYTHONIOENCODING=utf-8 on Windows.
+Run from the skill directory. The scripts switch stdout/stderr to UTF-8
+themselves, so no PYTHONIOENCODING is needed on Windows.
 """
 import argparse
 import gzip
 import os
 import sys
+
+# Windows 控制台默认 GBK:让 stdout/stderr 自行切到 UTF-8,调用方无需设
+# PYTHONIOENCODING
+for _s in (sys.stdout, sys.stderr):
+    try:
+        _s.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ARCHIVE = os.path.normpath(os.path.join(HERE, "..", "references", "pbidea_sources.txt.gz"))

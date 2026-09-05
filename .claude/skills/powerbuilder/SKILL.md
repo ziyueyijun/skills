@@ -53,7 +53,7 @@ disable-model-invocation: true
    python scripts/search_db.py "SetTransObject AND Retrieve" 20
    ```
    命中输出「文件名 + 页码 + 片段」。多词默认 AND，可用 OR 扩查，短语加引号。
-   Windows 下用 `PYTHONIOENCODING=utf-8`。
+   Windows 下脚本已自行把输出切到 UTF-8，无需任何环境变量。
 
 2. **一次取回完整上下文**。检索时加 `--pages N`，让 `search_db.py` 在打印命中片段的同时，
    把前 N 个命中的完整页文本一起输出（函数签名、代码示例常跨页互补），通常这一步就够作答：

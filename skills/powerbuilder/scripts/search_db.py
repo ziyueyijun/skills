@@ -33,6 +33,14 @@ import os
 import re
 import sys
 
+# Windows 控制台默认 GBK:让 stdout/stderr 自行切到 UTF-8,调用方无需设
+# PYTHONIOENCODING
+for _s in (sys.stdout, sys.stderr):
+    try:
+        _s.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 ARCHIVE = os.path.normpath(os.path.join(HERE, "..", "references", "pb_pages.txt.gz"))
 BODY = os.path.normpath(os.path.join(HERE, "..", "references", "pb_pages.body.gz"))

@@ -18,6 +18,15 @@ import argparse
 import gzip
 import os
 import re
+import sys
+
+# Windows 控制台默认 GBK:让 stdout/stderr 自行切到 UTF-8,调用方无需设
+# PYTHONIOENCODING
+for _s in (sys.stdout, sys.stderr):
+    try:
+        _s.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
 
 # PB export files are GBK-encoded (Chinese Windows / classic PowerBuilder). Some
 # may be plain ASCII or UTF-8; try in that order and fall back to latin-1.

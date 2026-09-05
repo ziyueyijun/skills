@@ -21,7 +21,7 @@ API 参考。
 - 检查当前机器是否有 Python：`python --version`（Windows 下也可试 `py --version`）。
   **若提示找不到 `python` / `py`**：先安装 Python 3（https://www.python.org/downloads/），
   否则检索脚本无法运行。
-- Windows 下运行脚本时统一加 `PYTHONIOENCODING=utf-8`，否则 GBK 控制台打印中文会报编码错误。
+- Windows 下脚本已自行把输出切到 UTF-8，无需任何环境变量。
 - 整个技能目录可整体复制到任何装有 Python 3 的机器使用，无需联网、无需额外模型。
 
 ## 组件地图（先知道有什么，再检索）
@@ -45,7 +45,7 @@ PbIdea 是「基于 JSON 与 WebAPI 的 PowerBuilder 接口扩展库」，核心
 | UI | `uo_chart`（painter 库）、`uo_led`、`uo_cover`、`uo_datawindowex` | 图表、LED、遮罩窗口 |
 | 其他库 | sciter 库 `uo_sciter*`（HTML UI）、web 库 `uo_datastore`/`uo_html`/`nvo_webreponse_*`、web_client 库 `uo_datawindow_client`、haikang 库 `uo_fingerprint`（指纹仪）/`uo_hcusb`（身份证）、pbjson 库为演示程序 | — |
 
-需要完整清单时运行 `PYTHONIOENCODING=utf-8 python scripts/list_objects.py`（可加 pbl 名、
+需要完整清单时运行 `python scripts/list_objects.py`（可加 pbl 名、
 `--type`、`--name` 过滤）。
 
 ## 检索工作流
@@ -53,9 +53,9 @@ PbIdea 是「基于 JSON 与 WebAPI 的 PowerBuilder 接口扩展库」，核心
 1. **全文检索定位（主路径）**。从用户问题里提取英文关键词（对象名、函数名、常量名）和中文
    关键词（功能描述），用 `search_db.py` 亚秒级定位命中对象：
    ```bash
-   PYTHONIOENCODING=utf-8 python scripts/search_db.py Request
-   PYTHONIOENCODING=utf-8 python scripts/search_db.py "uo_json Get"
-   PYTHONIOENCODING=utf-8 python scripts/search_db.py 加密 签名
+   python scripts/search_db.py Request
+   python scripts/search_db.py "uo_json Get"
+   python scripts/search_db.py 加密 签名
    ```
    多个关键词默认 AND 收窄（引号可有可无）。注意：匹配按**子串**进行（大小写不敏感），
    **不支持 AND/OR 等布尔运算符**，需要更宽/更窄搜索时直接换关键词或增减词数。命中输出
@@ -65,12 +65,12 @@ PbIdea 是「基于 JSON 与 WebAPI 的 PowerBuilder 接口扩展库」，核心
    个命中对象的完整源码一起输出（函数签名、中文注释、常量、事件脚本同在一个文件里互补），
    通常这一步就够作答：
    ```bash
-   PYTHONIOENCODING=utf-8 python scripts/search_db.py "uo_httpclient Request" --pages 2
+   python scripts/search_db.py "uo_httpclient Request" --pages 2
    ```
    若已知对象名、想直接看完整源码，用 `get_object.py`：
    ```bash
-   PYTHONIOENCODING=utf-8 python scripts/get_object.py uo_json
-   PYTHONIOENCODING=utf-8 python scripts/get_object.py uo_json websuite   # 同名时指定库
+   python scripts/get_object.py uo_json
+   python scripts/get_object.py uo_json websuite   # 同名时指定库
    ```
 
 3. **按组件地图定位（辅助）**。若不知道从哪个关键词下手，先看「组件地图」确定对象归属，
@@ -96,7 +96,7 @@ PbIdea 的 API 面极宽（566 个对象，函数签名、常量值、级联路�
   每个对象附一句中文描述），已随技能交付，可直接使用；整体复制到别的机器无需任何额外处理。
 - 源码更新后可用 `scripts/build_archive.py` 一键重建压缩索引：
   ```bash
-  PYTHONIOENCODING=utf-8 python scripts/build_archive.py --source <PbIdea 源码目录>
+  python scripts/build_archive.py --source <PbIdea 源码目录>
   ```
 - 数据文件是 UTF-8 文本的 gzip 压缩包，PB 导出文件中的布局坐标、字体等属性完整保留但无实际
   渲染价值；函数签名、注释、事件脚本、常量声明完整可读。
