@@ -65,10 +65,23 @@ npx skills add ziyueyijun/skills@<技能名>
 
 > 技能表由 [tools/sync-skills.sh](tools/sync-skills.sh) 自动维护(两份 README 同步更新),请勿手改标记区间内内容。
 
+## 以插件方式安装(只读整包)
+
+本仓库同时也是 Claude Code / Codex 插件(`.claude-plugin/plugin.json`;Codex 除原生根级 `plugin.json` 外,也将该路径识别为 legacy 插件来源)。插件安装为**只读整包,技能名带命名空间**(如 `/ziyueyijun-skills:grill-me`)——`npx skills`(可编辑副本)与插件二选一,勿同时安装两份。
+
+```bash
+# Claude Code:把仓库添加为 marketplace,再安装插件
+/plugin marketplace add ziyueyijun/skills
+/plugin install ziyueyijun-skills@ziyueyijun-skills
+```
+
+装完若提示,执行 `/reload-plugins` 生效。(实际安装命令以 `/plugin` 面板显示的市场名为准;Codex 客户端的具体安装入口可能不同,以它的插件界面为准。)
+
 ## 目录结构
 
 - `skills/<技能名>/SKILL.md` — 发布布局,`npx skills add ziyueyijun/skills` 可自动发现
 - `.agents/skills/`、`.claude/skills/` — 安装态真实副本(clone 后开箱即用)
+- `.claude-plugin/plugin.json` + `marketplace.json` — 插件与 marketplace 清单(Claude Code / Codex)
 - `rules/AGENTS.md` / `rules/AGENTS.zh.md` — 通用 agent 规则(English / 中文版)
 - `tools/sync-skills.sh` + `tools/update_readme.py` — 镜像同步与技能表自动更新(两份 README 同步)
 - `skills-lock.json` — 技能来源记录(README 表格的数据源)

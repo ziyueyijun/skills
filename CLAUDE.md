@@ -15,3 +15,4 @@ bash tools/sync-skills.sh
 4. **许可证**:复制第三方技能前先确认其许可允许再分发(须 MIT/Apache 类);MIT 许可需在 README「许可」节保留原作者版权声明。
 5. **符号链接禁令**:提交内容一律为真实文件。`.claude/skills` 若出现 npx 创建的 junction/符号链接,先替换为真实副本再提交(Windows 上链接目标为绝对路径,对他人无效)。
 6. 同步脚本与约定文件(`tools/`、本文件)的改动需随仓库提交,确保其他机器 clone 后规则仍生效。
+7. **插件清单人工维护**:`.claude-plugin/plugin.json` 与 `marketplace.json` 不在自动同步范围内;新增/移除技能或行为变化时,同步更新 manifest 的 description,并按需递增 `version`(或打 tag)。

@@ -65,10 +65,23 @@ npx skills add ziyueyijun/skills@<skill-name>
 
 > The skill tables above are auto-maintained by [tools/sync-skills.sh](tools/sync-skills.sh); do not hand-edit anything between the markers.
 
+## Install as a plugin (read-only bundle)
+
+This repo is also a Claude Code / Codex plugin (`.claude-plugin/plugin.json`; Codex recognizes this manifest path as a legacy plugin source in addition to its native root-level `plugin.json`). Plugin installs are **read-only bundles with namespaced skill names** (e.g. `/ziyueyijun-skills:grill-me`) — pick either `npx skills` (editable copies) or the plugin, not both.
+
+```bash
+# Claude Code: add the repo as a marketplace, then install the plugin
+/plugin marketplace add ziyueyijun/skills
+/plugin install ziyueyijun-skills@ziyueyijun-skills
+```
+
+After installing, run `/reload-plugins` if prompted. (Exact install command reflects the marketplace name shown by `/plugin`; Codex's client-specific install entry point may differ — check its plugin UI.)
+
 ## Repository layout
 
 - `skills/<skill-name>/SKILL.md` — publish layout, discovered by `npx skills add ziyueyijun/skills`
 - `.agents/skills/`, `.claude/skills/` — real install copies (usable immediately after clone)
+- `.claude-plugin/plugin.json` + `marketplace.json` — plugin & marketplace manifests (Claude Code / Codex)
 - `rules/AGENTS.md` / `rules/AGENTS.zh.md` — general agent rules (English / Chinese)
 - `tools/sync-skills.sh` + `tools/update_readme.py` — mirror sync & auto table regeneration (updates both READMEs)
 - `skills-lock.json` — upstream source records (data source for the README tables)
