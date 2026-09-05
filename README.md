@@ -1,26 +1,13 @@
 # skills
 
-An AI agent skills collection by ziyueyijun, built on the open agent skills ecosystem ([skills.sh](https://skills.sh)). Compatible with mainstream agents: Claude Code, Codex, Cursor, and more.
+An AI agent skills collection by ziyueyijun. Skills live directly in `.claude/skills/` and load automatically when Claude Code runs in this repository — no installation step needed here.
 
 **中文版:** [README.zh-CN.md](README.zh-CN.md)
 
-## Install all skills with one command
+## Using these skills
 
-```bash
-npx skills add ziyueyijun/skills
-```
-
-### Global install (available in all projects)
-
-```bash
-npx skills add ziyueyijun/skills -g
-```
-
-### Install a single skill
-
-```bash
-npx skills add ziyueyijun/skills@<skill-name>
-```
+- **In this repository:** open Claude Code here; each skill loads automatically (manual-invoked ones — `disable-model-invocation` — start with `/skill-name`).
+- **In another project:** copy `.claude/skills/<name>` into that project's `.claude/skills/`, or into `~/.claude/skills/` to make it available in every project. Skills are self-contained (stdlib-only Python scripts, no network), so a directory copy is all you need.
 
 ## Skills
 
@@ -53,7 +40,6 @@ npx skills add ziyueyijun/skills@<skill-name>
 | `diagnosing-bugs` | Diagnosis loop for hard bugs and performance regressions. Use when the u… |
 | `domain-modeling` | Build and sharpen a project's domain model. Use when discussing codebase… |
 | `find-skills` | Helps users discover and install agent skills when they ask questions li… |
-| `frontend-design` | Guidance for distinctive, intentional visual design when building new UI… |
 | `git-guardrails-claude-code` | Set up Claude Code hooks to block dangerous git commands (push, reset --… |
 | `grilling` | Grill the user relentlessly about a plan, decision, or idea. Use when th… |
 | `prototype` | Build a throwaway prototype to answer a design question. Use when the us… |
@@ -65,14 +51,13 @@ npx skills add ziyueyijun/skills@<skill-name>
 | `wizard` | Generate an interactive bash wizard that walks a human through steps onl… |
 <!-- skills-table:end -->
 
-> The skill tables above are auto-maintained by [tools/sync-skills.sh](tools/sync-skills.sh); do not hand-edit anything between the markers.
+> The skill tables above are auto-maintained by [tools/update_readme.py](tools/update_readme.py); do not hand-edit anything between the markers.
 
 ## Repository layout
 
-- `skills/<skill-name>/SKILL.md` — publish layout, discovered by `npx skills add ziyueyijun/skills`
-- `.agents/skills/`, `.claude/skills/` — real install copies (usable immediately after clone)
+- `.claude/skills/<skill-name>/SKILL.md` — the one and only skills directory; Claude Code loads skills from it when running in this repo
+- `tools/update_readme.py` + `tools/skill-desc-zh.json` — skill-table regeneration (Chinese descriptions)
 - `rules/AGENTS.md` / `rules/AGENTS.zh.md` — general agent rules (English / Chinese)
-- `tools/sync-skills.sh` + `tools/update_readme.py` — mirror sync & auto table regeneration (updates both READMEs)
 - `skills-lock.json` — install records kept by `npx skills` (source + content hash per skill)
 
 ## General agent rules

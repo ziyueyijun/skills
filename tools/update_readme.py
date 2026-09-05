@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""重生成 README.md(英文)与 README.zh-CN.md(中文)的技能表(标记区间),供 tools/sync-skills.sh 调用。
+"""重生成 README.md(英文)与 README.zh-CN.md(中文)的技能表(标记区间)。
 
-数据源:skills/*/SKILL.md 的 frontmatter(name/description/disable-model-invocation);
+数据源:.claude/skills/*/SKILL.md 的 frontmatter(name/description/disable-model-invocation);
 中文说明:tools/skill-desc-zh.json(缺失回退英文 frontmatter);
 手动触发表行序:MANUAL_ORDER(工作流顺序,非字母序),未列入的新技能自动排在末尾。
+
+用法:python tools/update_readme.py(在仓库根目录运行)
 """
 import json
 import pathlib
@@ -12,7 +14,7 @@ import re
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-SKILLS_DIR = ROOT / "skills"
+SKILLS_DIR = ROOT / ".claude" / "skills"
 
 # 手动触发技能的行序(README 展示顺序,工作流顺序);不在列表中的新增技能自动排在末尾(按名称)
 MANUAL_ORDER = [

@@ -1,26 +1,13 @@
 # skills
 
-ziyueyijun 的 AI agent 技能合集,基于开放 agent skills 生态([skills.sh](https://skills.sh)),兼容 Claude Code、Codex、Cursor 等主流 agent。
+ziyueyijun 的 AI agent 技能合集。技能直接维护在 `.claude/skills/`,在本仓库内打开 Claude Code 即自动加载,无需安装步骤。
 
 **English version:** [README.md](README.md)
 
-## 一条命令安装全部技能
+## 使用方式
 
-```bash
-npx skills add ziyueyijun/skills
-```
-
-### 装到全局(所有项目可用)
-
-```bash
-npx skills add ziyueyijun/skills -g
-```
-
-### 只装单个技能
-
-```bash
-npx skills add ziyueyijun/skills@<技能名>
-```
+- **本仓库内**:在本目录打开 Claude Code,技能自动加载;手动触发技能(`disable-model-invocation`)以 `/技能名` 唤起。
+- **其他项目/全局**:把 `.claude/skills/<技能名>` 复制到目标项目的 `.claude/skills/`,或放入 `~/.claude/skills/`(所有项目可用)。技能自包含(仅 Python 内置库、无联网),复制目录即可。
 
 ## 技能列表
 
@@ -53,7 +40,6 @@ npx skills add ziyueyijun/skills@<技能名>
 | `diagnosing-bugs` | 硬 bug 与性能回退的诊断循环:建立可复现反馈环、最小化、假设、插桩、修复、回归测试。 |
 | `domain-modeling` | 构建并打磨项目领域模型:讨论代码库术语、编写或编辑 CONTEXT.md、记录 ADR 时使用。 |
 | `find-skills` | 帮助查找并安装开放 agent 技能生态中的技能:回答「有没有做 X 的技能」「帮我找 X 技能」等需求。 |
-| `frontend-design` | 为新建或重塑 UI 提供有辨识度、有意图的视觉设计指导:美学方向、排版,避免模板化默认样式。 |
 | `git-guardrails-claude-code` | 为 Claude Code 配置 hooks,在危险 git 命令(push、reset --hard、clean、branch -D 等)执行… |
 | `grilling` | 对方案、决策、想法穷追不舍地提问以压力测试思路;grill-me、triage、wayfinder 等共用的底层原语。 |
 | `prototype` | 做一次性原型回答设计问题:状态或逻辑用单个共享 HTML,UI 探索用可切换的多方案变体。 |
@@ -65,14 +51,13 @@ npx skills add ziyueyijun/skills@<技能名>
 | `wizard` | 生成交互式 bash 向导,引导人类完成只有他们能做的步骤:基础设施、凭据、CI 机密、陌生后台或一次性迁移。 |
 <!-- skills-table:end -->
 
-> 技能表由 [tools/sync-skills.sh](tools/sync-skills.sh) 自动维护(两份 README 同步更新),请勿手改标记区间内内容。
+> 技能表由 [tools/update_readme.py](tools/update_readme.py) 自动维护,请勿手改标记区间内内容。
 
 ## 目录结构
 
-- `skills/<技能名>/SKILL.md` — 发布布局,`npx skills add ziyueyijun/skills` 可自动发现
-- `.agents/skills/`、`.claude/skills/` — 安装态真实副本(clone 后开箱即用)
+- `.claude/skills/<技能名>/SKILL.md` — 唯一的技能目录;在本仓库内打开 Claude Code 即从此加载
+- `tools/update_readme.py` + `tools/skill-desc-zh.json` — 技能表重新生成(中文说明映射)
 - `rules/AGENTS.md` / `rules/AGENTS.zh.md` — 通用 agent 规则(English / 中文版)
-- `tools/sync-skills.sh` + `tools/update_readme.py` — 镜像同步与技能表自动更新(两份 README 同步)
 - `skills-lock.json` — `npx skills` 安装记录(每个技能的来源与内容哈希)
 
 ## 通用规则
