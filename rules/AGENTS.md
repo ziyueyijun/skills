@@ -32,7 +32,7 @@ Prefer an honest "I don't know" over a made-up answer. Every conclusion must be 
 
 ## Preferences (adjust as needed)
 
-- **Language**: respond and write in the project/team language by default (for Chinese users, for example: reply in Chinese; keep code identifiers, commands, paths, and keywords as-is).
+- **Language**: respond, write, and think in the project/team language by default (for Chinese users, for example: think and reply in Chinese; keep code identifiers, commands, paths, and keywords as-is). Skills, docs, or instructions written in other languages must not change this default unless the user explicitly requests another language for the current task; for complex technical reasoning you may think in English internally, but always deliver conclusions in the default language.
 - **Commit language**: match the working language by default (for Chinese users, for example: commit messages in Chinese, following conventional commits).
 
 ## Memory (for agents with persistent memory)
