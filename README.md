@@ -66,13 +66,16 @@ npx skills add ziyueyijun/skills@<技能名>
 
 ## 通用规则
 
-[rules/AGENTS.zh.md](rules/AGENTS.zh.md)(中文版)/ [rules/AGENTS.md](rules/AGENTS.md)(English)是一份可直接使用的 agent 通用规则(核心原则:不编造、先证据;含安全与破坏性操作底线、冲突裁决、运行模式等)。「底线」建议全盘保留,「偏好」可按需裁剪。
+[rules/AGENTS.zh.md](rules/AGENTS.zh.md)(中文版)/ [rules/AGENTS.md](rules/AGENTS.md)(English)是一份可直接使用的 agent 通用规则(核心原则:不编造、先证据;含安全与破坏性操作底线、冲突裁决、运行模式等)。「底线」建议全盘保留,「偏好」可按需裁剪。内容不依赖任何工具专属语法。
 
-```bash
-# Claude Code:全局生效
-cp rules/AGENTS.md ~/.claude/CLAUDE.md
-# 或放入单个项目根目录,命名为 CLAUDE.md 或 AGENTS.md
-```
+注意:规则文件本身通用,但**各工具读取的文件名不同**——Claude Code 只读 `CLAUDE.md`,Codex 只读 `AGENTS.md`(二者均不读取对方文件名,此差异已在官方文档/源码验证)。按目标工具放置:
+
+| 目标 | 放置位置 | 命令 |
+|---|---|---|
+| Claude Code(全局) | `~/.claude/CLAUDE.md` | `cp rules/AGENTS.md ~/.claude/CLAUDE.md` |
+| Claude Code(单个项目) | 项目根 `CLAUDE.md` | 把规则复制为项目根 `AGENTS.md`,再在 CLAUDE.md 顶部加一行 `@AGENTS.md` import(官方推荐,双工具共用一份) |
+| Codex(全局) | `~/.codex/AGENTS.md` | `cp rules/AGENTS.md ~/.codex/AGENTS.md` |
+| Codex(单个项目) | 项目根 `AGENTS.md` | 直接放入项目根即可 |
 
 ## 许可
 
