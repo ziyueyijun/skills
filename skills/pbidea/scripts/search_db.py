@@ -27,6 +27,7 @@ call.
 import argparse
 import gzip
 import os
+import re
 import sys
 
 WIDTH = 40
@@ -38,10 +39,6 @@ EXT = {"用户对象": "sru", "数据窗口": "srd", "窗口": "srw", "全局函
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ARCHIVE = os.path.normpath(os.path.join(HERE, "..", "references", "pbidea_sources.txt.gz"))
-
-# whitespace -> space, so snippet positions stay aligned with the original text
-_WS = {ord(c): 32 for c in "\t\n\r\x0b\x0c"}
-
 
 def load_records():
     """Return list of dicts: pbl/filename/type/text (+ folded copies)."""
@@ -55,12 +52,10 @@ def load_records():
         fields = head.split("\x1f", 3) + [""]
         recs.append({"pbl": fields[0], "filename": fields[1], "type": fields[2],
                      "text": text, "rowid": len(recs)})
-    for r in recs:  # folded copy keeps byte alignment with the original text
-        r["folded"] = r["text"].translate(_WS).casefold()
-        # the old index covered the pbl / filename / type columns too: a term
-        # like "websuite" (pbl name) must hit even if it never appears in the
-        # source text
-        r["head"] = f"{r['pbl']} {r['filename']} {r['type']}".casefold()
+    for r in recs:  # match against the pbl / filename / type columns too: a
+        # term like "websuite" (pbl name) must hit even if it never appears in
+        # the source text
+        r["head"] = f"{r['pbl']} {r['filename']} {r['type']}"
     return recs
 
 
@@ -93,19 +88,21 @@ def main():
     if not terms:
         sys.exit("query is empty — give me keywords like: uo_json Parse")
 
-    recs = load_records()
-    fold_terms = [t.translate(_WS).casefold() for t in terms]
+    # Case-insensitive substring match straight on the raw text: query tokens
+    # never contain whitespace, so no whitespace-folded copy is needed — and
+    # str.translate over CJK text is slow (it dominated the load time).
+    pats = [re.compile(re.escape(t), re.I) for t in terms]
 
+    recs = load_records()
     hits = [r for r in recs
-            if all(t in r["folded"] or t in r["head"] for t in fold_terms)]
+            if all(p.search(r["text"]) or p.search(r["head"]) for p in pats)]
     if not hits:
         print("无命中。换用更短或更典型的关键词再试（函数名、组件名、中文关键词，一次 1-3 个）。")
         return
 
     # Rank: object name matching a keyword first, then archive order.
     def name_matches(row):
-        low_name = row["filename"].casefold()
-        return sum(1 for t in fold_terms if t in low_name)
+        return sum(1 for p in pats if p.search(row["filename"]))
 
     hits.sort(key=lambda r: (-name_matches(r), r["rowid"]))
 
