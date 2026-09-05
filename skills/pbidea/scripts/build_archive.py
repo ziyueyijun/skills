@@ -62,20 +62,37 @@ def decode_file(path):
 def extract_description(text):
     """Best-effort one-line description of an object.
 
-    Priority: the bilingual `//cn:` comment inside the `type variables` block
-    (uo_httpclient.sru literally documents itself as "基于winhttp的http client"
-    there); otherwise the first `//` comment anywhere in the file.
+    Priority: the bilingual `//cn:`/`//en:` comment inside the `type variables`
+    block (uo_httpclient.sru literally documents itself as "基于winhttp的http
+    client" there); then the same tags anywhere in the file; finally the first
+    plain comment line that does not read like commented-out code — the old
+    fallback grabbed lines such as "//MessageBox(...)" verbatim.
     """
     m = re.search(r"type variables\s*(.*?)\s*end variables", text, re.S)
     block = m.group(1) if m else ""
-    for pat in (r"//cn:\s*(.+)", r"//en:\s*(.+)"):
-        cm = re.search(pat, block)
-        if cm:
-            return cm.group(1).strip()
-    cm = re.search(r"^\s*//\s*(.+)$", text, re.MULTILINE)
-    if cm:
-        return cm.group(1).strip()
+    for cm in re.finditer(r"//(?:cn|en):\s*(.+)", block, re.I):
+        desc = cm.group(1).strip()
+        if desc:
+            return desc
+    for cm in re.finditer(r"//(?:cn|en):\s*(.+)", text, re.I):
+        desc = cm.group(1).strip()
+        if desc:
+            return desc
+    for cm in re.finditer(r"^\s*//\s*(.+)$", text, re.MULTILINE):
+        desc = cm.group(1).strip()
+        if desc and not _looks_like_code(desc):
+            return desc
     return ""
+
+
+def _looks_like_code(desc):
+    """True when a // line is commented-out code, not prose description.
+
+    Heuristic on the line right after "//": starts with an identifier followed
+    by "(" (a call like "MessageBox(...)"), or contains an assignment or ends
+    with ";" (e.g. "BorderColor = RGB(200,120,60)").
+    """
+    return bool(re.search(r"^[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*\s*\(|\s*=\s*|;$", desc))
 
 
 def main():
