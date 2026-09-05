@@ -13,6 +13,8 @@
   "handoff": "把当前对话压缩成一份交接文档,供另一个 agent 接手继续。",
   "implement": "按 spec 或一组 ticket 实现一块工作。",
   "improve-codebase-architecture": "扫描代码库寻找「深化模块」机会并输出可视化 HTML 报告,再对选中项逐一 grill。",
+  "pbidea": "PbIdea 框架 API 查询技能,由 /pbidea 手动触发:uo_json(JSON 解析/生成/与 DataWindow 互转)、uo_httpclient/uo_curl(HTTP 客户端、上传下载)、加密与编码(uo_crypto/uo_rsa/国密 SM2/SM3/SM4/base64)、数据库(uo_database/uo_recordset)、uo_datawindowex、uo_bson、uo_csv、uo_compress、uo_thread 等 WebSuite 组件,以及 sciter、web、web_client、haikang、painter 各库对象。",
+  "powerbuilder": "PowerBuilder 官方开发文档查询技能,由 /powerbuilder 手动触发:PowerScript 语言(语法/语句/事件/函数/数据类型)、DataWindow 与 DataStore(对象属性/表达式函数/方法/常量/事务对象)、窗口与控件(Window/ListView/TreeView/Tab 等,含属性与事件)、数据库连接(ODBC/OLE DB/直连/连接参考)、部署到 .NET、应用技术(OOP/XML/RichText/COM/邮件)、安装与发布公告。",
   "prototype": "做一次性原型回答设计问题:状态或逻辑用单个共享 HTML,UI 探索用可切换的多方案变体。",
   "research": "以高信任一手来源调研问题,结论写成带引用的 Markdown 文件入库,可由后台 agent 执行。",
   "resolving-merge-conflicts": "逐 hunk 解决进行中的 git merge/rebase 冲突,按意图回溯冲突双方源头,完成后收尾(不 abort)。",

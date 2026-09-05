@@ -1,6 +1,6 @@
 ---
 name: pbidea
-description: "PbIdea 框架 API 查询技能。由 /pbidea 命令手动触发。覆盖：uo_json（JSON 解析/生成/与 DataWindow 互转）、uo_httpclient / uo_curl（HTTP 客户端、上传下载）、加密与编码（uo_crypto/uo_rsa/国密 SM2/SM3/SM4/base64）、数据库（uo_database/uo_recordset）、uo_datawindowex、uo_bson、uo_csv、uo_compress、uo_thread 等 WebSuite 组件，以及 sciter、web、web_client、haikang、painter 各库中的对象。"
+description: "PbIdea framework API lookup skill, triggered manually via /pbidea. Covers the WebSuite components uo_json (JSON parsing/generation and DataWindow interop), uo_httpclient/uo_curl (HTTP client, upload/download), crypto & encoding (uo_crypto/uo_rsa/SM2/SM3/SM4/base64), database (uo_database/uo_recordset), uo_datawindowex, uo_bson, uo_csv, uo_compress, uo_thread, plus objects in the sciter, web, web_client, haikang, and painter libraries."
 disable-model-invocation: true
 ---
 

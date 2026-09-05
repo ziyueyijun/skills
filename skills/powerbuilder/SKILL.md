@@ -1,6 +1,6 @@
 ---
 name: powerbuilder
-description: "PowerBuilder 官方开发文档查询技能。由 /powerbuilder 命令手动触发。覆盖：PowerScript 语言（语法/语句/事件/函数/数据类型）、DataWindow 与 DataStore（对象属性/表达式函数/方法/常量/事务对象）、窗口与控件（Window/ListView/TreeView/Tab 等，含属性与事件）、数据库连接（ODBC/OLE DB/直连/连接参考）、部署到 .NET、应用技术（OOP/XML/RichText/COM/邮件）、安装与发布公告。"
+description: "PowerBuilder official documentation lookup skill, triggered manually via /powerbuilder. Covers the PowerScript language (syntax/statements/events/functions/data types), DataWindow & DataStore (object properties, expression functions, methods, constants, transaction objects), windows & controls (Window/ListView/TreeView/Tab, including properties and events), database connectivity (ODBC/OLE DB/native/connection reference), .NET deployment, application techniques (OOP/XML/RichText/COM/e-mail), and installation & release bulletins."
 disable-model-invocation: true
 ---
 
