@@ -41,6 +41,8 @@ npx skills add ziyueyijun/skills@<skill-name>
 | `handoff` | Compact the current conversation into a handoff document for another age… |
 | `triage` | Move issues and external PRs through a state machine of triage roles, ca… |
 | `improve-codebase-architecture` | Scan a codebase for deepening opportunities, present them as a visual HT… |
+| `pbidea` | PbIdea 框架 API 查询技能。由 /pbidea 命令手动触发。覆盖：uo_json（JSON 解析/生成/与 DataWindow 互… |
+| `powerbuilder` | PowerBuilder 官方开发文档查询技能。由 /powerbuilder 命令手动触发。覆盖：PowerScript 语言（语法/语句/事… |
 
 ### Auto-invoked (model calls when relevant)
 

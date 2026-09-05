@@ -41,6 +41,8 @@ npx skills add ziyueyijun/skills@<技能名>
 | `handoff` | 把当前对话压缩成一份交接文档,供另一个 agent 接手继续。 |
 | `triage` | 用状态机推动 issue 与外部 PR 走 triage 流程:分类、核验、必要时 grill、写出 agent 可执行的简报。 |
 | `improve-codebase-architecture` | 扫描代码库寻找「深化模块」机会并输出可视化 HTML 报告,再对选中项逐一 grill。 |
+| `pbidea` | PbIdea 框架 API 查询技能。由 /pbidea 命令手动触发。覆盖：uo_json（JSON 解析/生成/与 DataWindow 互… |
+| `powerbuilder` | PowerBuilder 官方开发文档查询技能。由 /powerbuilder 命令手动触发。覆盖：PowerScript 语言（语法/语句/事… |
 
 ### 自动触发(模型按需调用)
 
