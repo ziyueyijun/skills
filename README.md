@@ -60,8 +60,19 @@ npx skills add ziyueyijun/skills@<技能名>
 
 - `skills/<技能名>/SKILL.md` — 发布布局,`npx skills add ziyueyijun/skills` 可自动发现
 - `.agents/skills/`、`.claude/skills/` — 安装态真实副本(clone 后开箱即用)
+- `rules/AGENTS.zh.md` — 通用 agent 规则(证据诚实、安全底线、工作方式)
 - `tools/sync-skills.sh` + `tools/update_readme.py` — 镜像同步与技能表自动更新
 - `skills-lock.json` — 技能来源记录(README 表格的数据源)
+
+## 通用规则
+
+[rules/AGENTS.zh.md](rules/AGENTS.zh.md) 是一份可直接使用的 agent 通用规则(核心原则:不编造、先证据;含安全与破坏性操作底线、冲突裁决、运行模式等)。「底线」建议全盘保留,「偏好」可按需裁剪。
+
+```bash
+# Claude Code:全局生效
+cp rules/AGENTS.zh.md ~/.claude/CLAUDE.md
+# 或放入单个项目根目录,命名为 CLAUDE.md 或 AGENTS.md
+```
 
 ## 许可
 
