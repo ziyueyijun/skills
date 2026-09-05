@@ -1,58 +1,45 @@
 #!/usr/bin/env python3
-"""Print full text of specific documentation pages (references/pb_pages.txt.gz).
+"""Fetch the full text of one or more pages from pb_docs.db.
+
+search_db.py finds which document+page a keyword appears in; this script retrieves
+the complete page text (function signatures, parameter lists, examples often
+span several pages), so you can answer without re-opening any document.
 
 Usage:
-    python scripts/get_pages.py 08_datawindow_reference 760 765
+    python scripts/get_pages.py <filename> <start_page> [<end_page>]
 
-Prints every page of that document whose number lies in [start, end],
-including both ends.
+- filename   : one of the document names stored in the index (e.g. "08_datawindow_reference")
+- start_page : 1-based page number
+- end_page   : optional; defaults to start_page
+
+Run from the skill directory. Use PYTHONIOENCODING=utf-8 on Windows.
 """
-import argparse
-import gzip
 import os
+import sqlite3
 import sys
-
-# Windows 控制台默认 GBK:让 stdout/stderr 自行切到 UTF-8,调用方无需设
-# PYTHONIOENCODING
-for _s in (sys.stdout, sys.stderr):
-    try:
-        _s.reconfigure(encoding="utf-8")
-    except Exception:
-        pass
-
-HERE = os.path.dirname(os.path.abspath(__file__))
-ARCHIVE = os.path.normpath(os.path.join(HERE, "..", "references", "pb_pages.txt.gz"))
-
-
-def load_records():
-    if not os.path.isfile(ARCHIVE):
-        sys.exit(f"Index not found: {ARCHIVE} — 技能包缺少 references/pb_pages.txt.gz")
-    with gzip.open(ARCHIVE, "rt", encoding="utf-8") as f:
-        raw = f.read()
-    recs = []
-    for blk in raw.split("\x1e")[1:]:
-        head, _, text = blk.partition("\n")
-        filename, _, page = head.partition("\x1f")
-        recs.append({"filename": filename, "page": int(page), "text": text})
-    return recs
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Print documentation pages by range")
-    parser.add_argument("filename", help="document name as shown by search_db.py")
-    parser.add_argument("start", type=int, help="first page number")
-    parser.add_argument("end", type=int, help="last page number (inclusive)")
-    args = parser.parse_args()
+    if len(sys.argv) < 3:
+        print(__doc__)
+        sys.exit(1)
+    name, start = sys.argv[1], int(sys.argv[2])
+    end = int(sys.argv[3]) if len(sys.argv) > 3 else start
 
-    recs = load_records()
-    pool = [r for r in recs
-            if r["filename"] == args.filename and args.start <= r["page"] <= args.end]
-    if not pool:
-        sys.exit(f"未找到 {args.filename} 第 {args.start}-{args.end} 页，检查文件名与页码")
-    pool.sort(key=lambda r: r["page"])
-    for r in pool:
-        print(f"----- {r['filename']} 第 {r['page']} 页 -----")
-        print(r["text"])
+    here = os.path.dirname(os.path.abspath(__file__))
+    db_path = os.path.normpath(os.path.join(here, "..", "references", "pb_docs.db"))
+    conn = sqlite3.connect(db_path)
+
+    rows = conn.execute(
+        "SELECT page, text FROM pages WHERE filename = ? AND page BETWEEN ? AND ? "
+        "ORDER BY page", (name, start, end)).fetchall()
+    conn.close()
+
+    if not rows:
+        sys.exit(f"未找到 {name} 第 {start}-{end} 页（确认文件名和页码）")
+    for page, text in rows:
+        print(f"----- {name} 第 {page} 页 -----")
+        print(text)
         print()
 
 

@@ -1,26 +1,29 @@
 ---
 name: powerbuilder
-description: "PowerBuilder official documentation lookup skill, triggered manually via /powerbuilder. Covers the PowerScript language (syntax/statements/events/functions/data types), DataWindow & DataStore (object properties, expression functions, methods, constants, transaction objects), windows & controls (Window/ListView/TreeView/Tab, including properties and events), database connectivity (ODBC/OLE DB/native/connection reference), .NET deployment, application techniques (OOP/XML/RichText/COM/e-mail), and installation & release bulletins."
+description: >-
+  PowerBuilder 官方开发文档查询技能。由 /powerbuilder 命令手动触发。覆盖：PowerScript 语言
+  （语法/语句/事件/函数/数据类型）、DataWindow 与 DataStore（对象属性/表达式函数/方法/常量/
+  事务对象）、窗口与控件（Window/ListView/TreeView/Tab 等，含属性与事件）、数据库连接
+  （ODBC/OLE DB/直连/连接参考）、部署到 .NET、应用技术（OOP/XML/RichText/COM/邮件）、安装与
+  发布公告。
 disable-model-invocation: true
 ---
 
 # PowerBuilder 官方文档查询
 
-本技能把 SAP PowerBuilder 的 16 份官方文档（共约 6800 页）的全文打包成 gzip 压缩文本
-（`references/pb_pages.txt.gz` 与内部派生检索流 `pb_pages.body.gz`，合计约 4.6MB），检索脚本
-读进内存匹配，亚秒级返回。**核心原则：不要凭记忆编造 PowerBuilder 的 API 细节，凡涉及具体
-函数签名、属性名、枚举值、语法，一律查索引。**
+本技能把 SAP PowerBuilder 的 16 份官方文档（共约 6800 页）的全文索引进一个 SQLite 数据库
+`references/pb_docs.db`，用脚本毫秒级检索。**核心原则：不要凭记忆编造 PowerBuilder 的 API
+细节，凡涉及具体函数签名、属性名、枚举值、语法，一律查索引。**
 
 ## 运行前提（复制即用）
 
-- 只需本技能目录中的 `references/pb_pages.txt.gz` 与 `references/pb_pages.body.gz`
-  （均已预构建；前者是正文全文，后者是其 token 化派生检索流，两者须一起复制）。
-- 查询脚本只用 Python **内置** `gzip`/`re`，无需安装任何第三方包、无需联网；需要一个
-  Python 3 运行时（本技能在 3.11 上验证）。
+- 只需本技能目录中的 `references/pb_docs.db`（已预构建）。
+- 查询脚本只用 Python **内置** `sqlite3`（FTS5），无需安装任何第三方包；但需要一个
+  **Python 3.11+ 运行时**。
 - 检查当前机器是否有 Python：`python --version`（Windows 下也可试 `py --version`）。
-- **若提示找不到 `python` / `py`**：说明该机器未安装 Python，请先安装 Python 3
+- **若提示找不到 `python` / `py`**：说明该机器未安装 Python，请先安装 Python 3.11+
   （https://www.python.org/downloads/），否则 `search_db.py` / `get_pages.py` 无法运行。
-- 整个技能目录可整体复制到任何装有 Python 3 的机器使用，无需联网、无需额外模型。
+- 整个技能目录可整体复制到任何装有 Python 3.11+ 的机器使用，无需联网、无需额外模型。
 
 ## 文档清单（主题）
 
@@ -47,13 +50,13 @@ disable-model-invocation: true
 ## 检索工作流
 
 1. **全文检索定位（主路径）**。从用户问题里提取英文关键词（函数名、属性名、语法关键字），
-   用 `search_db.py` 亚秒级定位命中页：
+   用 `search_db.py` 毫秒级定位命中页：
    ```bash
    python scripts/search_db.py Modify
    python scripts/search_db.py "SetTransObject AND Retrieve" 20
    ```
    命中输出「文件名 + 页码 + 片段」。多词默认 AND，可用 OR 扩查，短语加引号。
-   Windows 下脚本已自行把输出切到 UTF-8，无需任何环境变量。
+   Windows 下用 `PYTHONIOENCODING=utf-8`。
 
 2. **一次取回完整上下文**。检索时加 `--pages N`，让 `search_db.py` 在打印命中片段的同时，
    把前 N 个命中的完整页文本一起输出（函数签名、代码示例常跨页互补），通常这一步就够作答：
@@ -79,11 +82,11 @@ disable-model-invocation: true
 
 PowerBuilder 的函数签名、属性名、枚举值、语法细节极多，且与主流语言不同（如
 `dw_1.Modify()`、`GetItemStatus()`、`PowerString` 等）。凭印象容易给错参数或记错属性名。
-索引是权威来源，按"搜索索引 → 取完整页"两步走，多数问题亚秒内可锁定位。
+索引是权威来源，按"搜索索引 → 取完整页"两步走，多数问题毫秒级可锁定位。
 
 ## 附注
 
-- 两个数据文件是预构建的（从官方文档提取全文后压缩；`pb_pages.body.gz` 为正文的 token 化
-  派生流，须与 `pb_pages.txt.gz` 一起复制），已随技能交付，可直接使用。
-- 数据是纯文本正文，丢失少量表格对齐和图片，但正文、代码、签名完整可读。
-- 查询依赖：仅 Python 内置 `gzip`，无第三方包、无联网。
+- `pb_docs.db` 是预构建的（从官方文档 提取全文后用 SQLite FTS5 建索引），已随技能交付，
+  可直接使用，也可整体复制到其他机器。
+- 索引存的是文本正文，丢失少量表格对齐和图片，但正文、代码、签名完整可读。
+- 查询依赖：仅 Python 内置 `sqlite3`（含 FTS5），无第三方包。

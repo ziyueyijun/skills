@@ -1,34 +1,38 @@
 ---
 name: pbidea
-description: "PbIdea framework API lookup skill, triggered manually via /pbidea. Covers the WebSuite components uo_json (JSON parsing/generation and DataWindow interop), uo_httpclient/uo_curl (HTTP client, upload/download), crypto & encoding (uo_crypto/uo_rsa/SM2/SM3/SM4/base64), database (uo_database/uo_recordset), uo_datawindowex, uo_bson, uo_csv, uo_compress, uo_thread, plus objects in the sciter, web, web_client, haikang, and painter libraries."
+description: >-
+  PbIdea 框架 API 查询技能。由 /pbidea 命令手动触发。覆盖：uo_json（JSON 解析/生成/与
+  DataWindow 互转）、uo_httpclient / uo_curl（HTTP 客户端、上传下载）、加密与编码
+  （uo_crypto/uo_rsa/国密 SM2/SM3/SM4/base64）、数据库（uo_database/uo_recordset）、
+  uo_datawindowex、uo_bson、uo_csv、uo_compress、uo_thread 等 WebSuite 组件，以及 sciter、
+  web、web_client、haikang、painter 各库中的对象。
 disable-model-invocation: true
 ---
 
 # PbIdea 框架 API 查询
 
 本技能把 PbIdea 框架的全部导出源码（`code/`，566 个 PB 对象：用户对象/数据窗口/窗口/函数/结构）
-全文打包成一个 gzip 压缩文本 `references/pbidea_sources.txt.gz`（约 0.8MB），检索脚本把它读进
-内存直接匹配，亚秒级返回。**核心原则：不要凭记忆编造 PbIdea 的 API 细节，凡涉及具体函数签名、
-属性名、常量值（如 HttpGet=1）、组件是否存在，一律查索引。** 索引内容直接来自框架源码本身
-（`.sru` 文件的外函数声明块 `type prototypes`、中文注释、常量、事件脚本），是最权威、最完整的
-API 参考。
+全文索引进一个 SQLite 数据库 `references/pbidea.db`，用脚本毫秒级检索。**核心原则：不要凭记忆
+编造 PbIdea 的 API 细节，凡涉及具体函数签名、属性名、常量值（如 HttpGet=1）、组件是否存在，
+一律查索引。** 索引内容直接来自框架源码本身（`.sru` 文件的外函数声明块 `type prototypes`、
+中文注释、常量、事件脚本），是最权威、最完整的 API 参考。
 
 ## 运行前提（复制即用）
 
-- 只需本技能目录中的 `references/pbidea_sources.txt.gz`（已预构建，~0.8MB）。
-- 查询脚本只用 Python **内置** `gzip`/`re`，无需安装任何第三方包、无需联网；需要 Python 3
-  运行时（本技能在 3.11 上验证）。
+- 只需本技能目录中的 `references/pbidea.db`（已预构建）。
+- 查询脚本只用 Python **内置** `sqlite3`（FTS5 trigram 分词器），无需安装任何第三方包；但需要
+  **Python 3.11+ 运行时**（其自带 SQLite ≥3.37，支持 trigram）。
 - 检查当前机器是否有 Python：`python --version`（Windows 下也可试 `py --version`）。
-  **若提示找不到 `python` / `py`**：先安装 Python 3（https://www.python.org/downloads/），
+  **若提示找不到 `python` / `py`**：先安装 Python 3.11+（https://www.python.org/downloads/），
   否则检索脚本无法运行。
-- Windows 下脚本已自行把输出切到 UTF-8，无需任何环境变量。
-- 整个技能目录可整体复制到任何装有 Python 3 的机器使用，无需联网、无需额外模型。
+- Windows 下运行脚本时统一加 `PYTHONIOENCODING=utf-8`，否则 GBK 控制台打印中文会报编码错误。
+- 整个技能目录可整体复制到任何装有 Python 3.11+ 的机器使用，无需联网、无需额外模型。
 
 ## 组件地图（先知道有什么，再检索）
 
 PbIdea 是「基于 JSON 与 WebAPI 的 PowerBuilder 接口扩展库」，核心实现编译在
-`PbIdea.dll`，PB 侧通过外函数声明调用。数据文件里为全部 566 个对象各带名称、所属库、类型和一句
-中文描述（来自源码注释）；用 `list_objects.py` 可浏览，下表是主要组件速览：
+`PbIdea.dll`，PB 侧通过外函数声明调用。`references/pbidea.db` 的 `catalog` 表存了全部 566 个
+对象的名称、所属库和一句中文描述；用 `list_objects.py` 可浏览，下表是主要组件速览：
 
 | 类别 | 对象（websuite 库） | 说明 |
 |---|---|---|
@@ -45,35 +49,32 @@ PbIdea 是「基于 JSON 与 WebAPI 的 PowerBuilder 接口扩展库」，核心
 | UI | `uo_chart`（painter 库）、`uo_led`、`uo_cover`、`uo_datawindowex` | 图表、LED、遮罩窗口 |
 | 其他库 | sciter 库 `uo_sciter*`（HTML UI）、web 库 `uo_datastore`/`uo_html`/`nvo_webreponse_*`、web_client 库 `uo_datawindow_client`、haikang 库 `uo_fingerprint`（指纹仪）/`uo_hcusb`（身份证）、pbjson 库为演示程序 | — |
 
-需要完整清单时运行 `python scripts/list_objects.py`（可加 pbl 名、
+需要完整清单时运行 `PYTHONIOENCODING=utf-8 python scripts/list_objects.py`（可加 pbl 名、
 `--type`、`--name` 过滤）。
 
 ## 检索工作流
 
 1. **全文检索定位（主路径）**。从用户问题里提取英文关键词（对象名、函数名、常量名）和中文
-   关键词（功能描述），用 `search_db.py` 亚秒级定位命中对象：
+   关键词（功能描述），用 `search_db.py` 毫秒级定位命中对象：
    ```bash
-   python scripts/search_db.py Request
-   python scripts/search_db.py "uo_json Get"
-   python scripts/search_db.py 加密 签名
-   python scripts/search_db.py "curl OR httpclient 超时"
-   python scripts/search_db.py '"function boolean Parse"'
+   PYTHONIOENCODING=utf-8 python scripts/search_db.py Request
+   PYTHONIOENCODING=utf-8 python scripts/search_db.py "uo_json Get"
+   PYTHONIOENCODING=utf-8 python scripts/search_db.py 加密 签名
    ```
-   多个关键词默认 AND 收窄（需在同一对象内都出现）；`OR` 分隔表示任一组命中即可，用于扩查；
-   双引号圈定**连续短语**（词间空白不限、可跨行），如 `"function boolean Parse"`。匹配按
-   **子串**进行（大小写不敏感）；想更宽/更窄直接换关键词或增减词数。命中输出
-   「库 / 对象名 （类型）+ 命中片段」。
+   多个关键词默认 AND 收窄（引号可有可无）。注意：索引用 trigram 分词器，**不支持 AND/OR 等
+   布尔运算符**，需要更宽/更窄搜索时直接换关键词或增减词数。命中输出「库 / 对象名 （类型）+
+   命中片段」。
 
 2. **一次取回完整上下文**。检索时加 `--pages N`，让 `search_db.py` 在打印命中片段的同时把前 N
    个命中对象的完整源码一起输出（函数签名、中文注释、常量、事件脚本同在一个文件里互补），
    通常这一步就够作答：
    ```bash
-   python scripts/search_db.py "uo_httpclient Request" --pages 2
+   PYTHONIOENCODING=utf-8 python scripts/search_db.py "uo_httpclient Request" --pages 2
    ```
    若已知对象名、想直接看完整源码，用 `get_object.py`：
    ```bash
-   python scripts/get_object.py uo_json
-   python scripts/get_object.py uo_json websuite   # 同名时指定库
+   PYTHONIOENCODING=utf-8 python scripts/get_object.py uo_json
+   PYTHONIOENCODING=utf-8 python scripts/get_object.py uo_json websuite   # 同名时指定库
    ```
 
 3. **按组件地图定位（辅助）**。若不知道从哪个关键词下手，先看「组件地图」确定对象归属，
@@ -90,17 +91,17 @@ PbIdea 是「基于 JSON 与 WebAPI 的 PowerBuilder 接口扩展库」，核心
 
 PbIdea 的 API 面极宽（566 个对象，函数签名、常量值、级联路径规则各不相同），且与主流语言
 习惯不同（如 JSON 数组下标从 0 起、`system library "PbIdea.dll"` 外函数声明、`uo_response`
-响应对象）。凭印象容易给错参数、记错常量或虚构不存在的组件。压缩文本索引是权威来源，按
-「搜索关键词 → 取完整对象源码」两步走，多数问题亚秒内可锁定。
+响应对象）。凭印象容易给错参数、记错常量或虚构不存在的组件。`pbidea.db` 是权威来源，按
+「搜索关键词 → 取完整对象源码」两步走，多数问题毫秒级可锁定。
 
 ## 附注
 
-- `pbidea_sources.txt.gz` 是预构建的（从 PbIdea 框架的导出源码打包，GBK/UTF-8 自动识别解码，
-  每个对象附一句中文描述），已随技能交付，可直接使用；整体复制到别的机器无需任何额外处理。
-- 源码更新后可用 `scripts/build_archive.py` 一键重建压缩索引：
+- `pbidea.db` 是预构建的（从 PbIdea 框架的导出源码构建，GBK/UTF-8 自动识别解码），已随技能
+  交付，可直接使用。
+- 源码更新后可用 `scripts/build_db.py` 一键重建索引：
   ```bash
-  python scripts/build_archive.py --source <PbIdea 源码目录>
+  PYTHONIOENCODING=utf-8 python scripts/build_db.py --source <PbIdea 源码目录>
   ```
-- 数据文件是 UTF-8 文本的 gzip 压缩包，PB 导出文件中的布局坐标、字体等属性完整保留但无实际
-  渲染价值；函数签名、注释、事件脚本、常量声明完整可读。
-- 查询依赖：仅 Python 内置 `gzip`，无第三方包、无联网。
+- 索引存的是文本正文，PB 导出文件中的布局坐标、字体等属性完整保留但无实际渲染价值；函数
+  签名、注释、事件脚本、常量声明完整可读。
+- 查询依赖：仅 Python 内置 `sqlite3`（含 FTS5 trigram），无第三方包。
