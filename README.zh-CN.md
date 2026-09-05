@@ -1,13 +1,32 @@
 # skills
 
-ziyueyijun 的 AI agent 技能合集。技能直接维护在 `.claude/skills/`,在本仓库内打开 Claude Code 即自动加载,无需安装步骤。
+ziyueyijun 的 AI agent 技能合集。本仓库原创技能通过开放 agent skills 生态([skills.sh](https://skills.sh))发布,一条命令即可安装;在本仓库内,技能位于 `.claude/skills/`,打开 Claude Code 即自动加载。
 
 **English version:** [README.md](README.md)
 
-## 使用方式
+## 用 npx 安装技能
 
-- **本仓库内**:在本目录打开 Claude Code,技能自动加载;手动触发技能(`disable-model-invocation`)以 `/技能名` 唤起。
-- **其他项目/全局**:把 `.claude/skills/<技能名>` 复制到目标项目的 `.claude/skills/`,或放入 `~/.claude/skills/`(所有项目可用)。技能自包含(仅 Python 内置库、无联网),复制目录即可。
+安装本仓库原创技能(当前为 `pbidea`、`powerbuilder`;[skills-lock.json](skills-lock.json) 中记录的上游技能按各自来源安装,不在此重复发布):
+
+```bash
+npx skills add ziyueyijun/skills
+```
+
+- 只列出可用技能不安装:`npx skills add ziyueyijun/skills -l`
+- 只装单个技能:`npx skills add ziyueyijun/skills -s pbidea`
+- 装到全局(所有项目可用):`npx skills add ziyueyijun/skills -g`
+
+CLI 会把技能写入项目的 `.agents/skills/`,并为 Claude Code 及其支持的各 agent 建立符号链接。
+
+## 更新技能
+
+- 已安装技能想更新到最新版:在安装它的项目里运行 `npx skills update`(全局安装用 `npx skills update -g`);只更新某一个用 `npx skills update <技能名>`。
+- 本仓库原创技能发布新版后,重新执行 `npx skills add ziyueyijun/skills`(或 `npx skills update`)即可拉到最新。
+
+## 在本仓库内使用
+
+- 在本目录打开 Claude Code:`.claude/skills/` 里的技能自动加载;手动触发技能(`disable-model-invocation`)以 `/技能名` 唤起。
+- 未装 npx 的其他项目:把 `.claude/skills/<技能名>` 复制到目标项目的 `.claude/skills/`,或放入 `~/.claude/skills/`(所有项目可用)。技能自包含(仅 Python 内置库、无联网),复制目录即可。
 
 ## 技能列表
 

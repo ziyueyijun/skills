@@ -1,13 +1,32 @@
 # skills
 
-An AI agent skills collection by ziyueyijun. Skills live directly in `.claude/skills/` and load automatically when Claude Code runs in this repository — no installation step needed here.
+An AI agent skills collection by ziyueyijun. This repository's own skills are published through the open agent skills ecosystem ([skills.sh](https://skills.sh)) and installable with one command; in the repository itself they live in `.claude/skills/` and load automatically when Claude Code runs here.
 
 **中文版:** [README.zh-CN.md](README.zh-CN.md)
 
-## Using these skills
+## Install skills with npx
 
-- **In this repository:** open Claude Code here; each skill loads automatically (manual-invoked ones — `disable-model-invocation` — start with `/skill-name`).
-- **In another project:** copy `.claude/skills/<name>` into that project's `.claude/skills/`, or into `~/.claude/skills/` to make it available in every project. Skills are self-contained (stdlib-only Python scripts, no network), so a directory copy is all you need.
+Installs this repo's own skills (currently `pbidea`, `powerbuilder` — skills tracked in [skills-lock.json](skills-lock.json) come from their respective upstreams and are not re-published here):
+
+```bash
+npx skills add ziyueyijun/skills
+```
+
+- List what is available without installing: `npx skills add ziyueyijun/skills -l`
+- Install a single skill: `npx skills add ziyueyijun/skills -s pbidea`
+- Global install (available in all projects): `npx skills add ziyueyijun/skills -g`
+
+The CLI writes the skill into the project's `.agents/skills/` and symlinks it for Claude Code and the other agents it supports.
+
+## Updating skills
+
+- Already installed a skill and want the latest version? Run `npx skills update` in that project (or `npx skills update -g` for a global install); `npx skills update <skill>` updates just one.
+- When this repository releases a new version of an original skill, re-run `npx skills add ziyueyijun/skills` (or `npx skills update`) to pull it.
+
+## Using skills in this repository
+
+- Open Claude Code here: every skill in `.claude/skills/` loads automatically (manual-invoked ones — `disable-model-invocation` — start with `/skill-name`).
+- In another project without npx: copy `.claude/skills/<name>` into that project's `.claude/skills/`, or into `~/.claude/skills/` to make it available in every project. Skills are self-contained (stdlib-only Python scripts, no network), so a directory copy is all you need.
 
 ## Skills
 
