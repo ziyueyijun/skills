@@ -20,7 +20,6 @@
   "setup-pre-commit": "在仓库配置 Husky 预提交钩子:lint-staged(Prettier)+ 类型检查 + 测试。",
   "setup-ts-deep-modules": "在 TS 仓库接入 dependency-cruiser,让每个包成为深模块:实现藏进子目录、仅能经接口访问。",
   "skill-creator": "创建、修改与优化技能并评测性能:从零写技能、跑 eval 测试、方差分析基准、优化描述提升触发准确率。",
-  "skill-lifecycle": "技能生命周期顾问:复杂问题解决收尾时判断是否值得沉淀成技能、技能是否已与需求脱节;值得时向用户提议(范围、步骤与坑),只提议不代劳,起草引导至 /skill-creator。",
   "tdd": "测试驱动开发:先写失败测试再修复(red-green-refactor),一次一个垂直切片。",
   "to-spec": "把当前对话综合成 spec 发布到项目 issue 追踪器:不追问,只整理已讨论的内容。",
   "to-tickets": "把计划、spec 或当前对话拆成一组「曳光弹」式 ticket,声明各自阻塞边,落到本地文件或追踪器。",

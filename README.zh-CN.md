@@ -59,7 +59,6 @@ npx skills add ziyueyijun/skills@<技能名>
 | `resolving-merge-conflicts` | 逐 hunk 解决进行中的 git merge/rebase 冲突,按意图回溯冲突双方源头,完成后收尾(不 abort)。 |
 | `setup-pre-commit` | 在仓库配置 Husky 预提交钩子:lint-staged(Prettier)+ 类型检查 + 测试。 |
 | `skill-creator` | 创建、修改与优化技能并评测性能:从零写技能、跑 eval 测试、方差分析基准、优化描述提升触发准确率。 |
-| `skill-lifecycle` | 技能生命周期顾问:复杂问题解决收尾时判断是否值得沉淀成技能、技能是否已与需求脱节;值得时向用户提议(范围、步骤与坑),只提议不代劳,起草引导至… |
 | `tdd` | 测试驱动开发:先写失败测试再修复(red-green-refactor),一次一个垂直切片。 |
 | `wizard` | 生成交互式 bash 向导,引导人类完成只有他们能做的步骤:基础设施、凭据、CI 机密、陌生后台或一次性迁移。 |
 <!-- skills-table:end -->

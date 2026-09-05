@@ -59,7 +59,6 @@ npx skills add ziyueyijun/skills@<skill-name>
 | `resolving-merge-conflicts` | Use when you need to resolve an in-progress git merge/rebase conflict. |
 | `setup-pre-commit` | Set up Husky pre-commit hooks with lint-staged (Prettier), type checking… |
 | `skill-creator` | Create new skills, modify and improve existing skills, and measure skill… |
-| `skill-lifecycle` | >- |
 | `tdd` | Test-driven development. Use when the user wants to build features or fi… |
 | `wizard` | Generate an interactive bash wizard that walks a human through steps onl… |
 <!-- skills-table:end -->
