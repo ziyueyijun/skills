@@ -20,6 +20,9 @@ OVERRIDE = {
     "frontend-design": "anthropics/skills",
 }
 
+# 技能说明中文映射;缺失时回退 frontmatter 英文描述
+DESC_ZH = ROOT / "tools" / "skill-desc-zh.json"
+
 MARK_START = "<!-- skills-table:start -->"
 MARK_END = "<!-- skills-table:end -->"
 
@@ -48,13 +51,16 @@ def load_sources() -> dict:
 def collect_rows() -> list:
     rows = []
     sources = load_sources()
+    desc_zh = {}
+    if DESC_ZH.exists():
+        desc_zh = json.loads(DESC_ZH.read_text(encoding="utf-8"))
     for skill_dir in sorted(p for p in SKILLS_DIR.iterdir() if p.is_dir()):
         md = skill_dir / "SKILL.md"
         if not md.exists():
             continue
         fm = frontmatter_of(md)
         name = fm.get("name") or skill_dir.name
-        desc = fm.get("description", "").replace("|", "\\|").strip()
+        desc = desc_zh.get(name) or fm.get("description", "").replace("|", "\\|").strip()
         if len(desc) > 72:
             desc = desc[:72].rstrip() + "…"
         source = OVERRIDE.get(name) or sources.get(name, "")
