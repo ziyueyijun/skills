@@ -18,6 +18,7 @@ themselves, so no PYTHONIOENCODING is needed on Windows.
 import argparse
 import gzip
 import os
+import re
 import sys
 
 # Windows 控制台默认 GBK:让 stdout/stderr 自行切到 UTF-8,调用方无需设
@@ -35,6 +36,19 @@ ARCHIVE = os.path.normpath(os.path.join(HERE, "..", "references", "pbidea_source
 # (用户对象 -> sru) so headers read like real file names.
 EXT = {"用户对象": "sru", "数据窗口": "srd", "窗口": "srw", "全局函数": "srf",
        "结构": "srs", "菜单": "srm", "工程": "srj", "应用": "sra"}
+
+# DataWindow exports carry painter attributes (coordinates, fonts, colors)
+# that are useless for API answers; strip them when printing. The index and
+# search matching are untouched.
+_LAYOUT_ATTR = re.compile(
+    r'\s(?:x|y|width|height|font\.[a-z.]+|color|background\.[a-z.]+|'
+    r'border)="(?:[^"]|"")*"')
+
+
+def strip_layout(text, kind):
+    if kind != "数据窗口":
+        return text
+    return _LAYOUT_ATTR.sub("", text)
 
 
 def load_records():
@@ -67,7 +81,7 @@ def main():
     for r in rows:
         ext = EXT.get(r["type"], r["type"])
         print(f"===== {r['pbl']} / {r['filename']}.{ext} =====")
-        print(r["text"])
+        print(strip_layout(r["text"], r["type"]))
         print()
 
 

@@ -48,6 +48,19 @@ WIDTH = 60
 EXT = {"用户对象": "sru", "数据窗口": "srd", "窗口": "srw", "全局函数": "srf",
        "结构": "srs", "菜单": "srm", "工程": "srj", "应用": "sra"}
 
+# DataWindow exports carry painter attributes (coordinates, fonts, colors)
+# that are useless for API answers; strip them when printing full objects.
+# The index and search matching are untouched.
+_LAYOUT_ATTR = re.compile(
+    r'\s(?:x|y|width|height|font\.[a-z.]+|color|background\.[a-z.]+|'
+    r'border)="(?:[^"]|"")*"')
+
+
+def strip_layout(text, kind):
+    if kind != "数据窗口":
+        return text
+    return _LAYOUT_ATTR.sub("", text)
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 ARCHIVE = os.path.normpath(os.path.join(HERE, "..", "references", "pbidea_sources.txt.gz"))
 
@@ -179,7 +192,7 @@ def main():
         for r in shown[:args.pages]:
             ext = EXT.get(r["type"], r["type"])
             print(f"----- {r['pbl']} / {r['filename']}.{ext} -----")
-            print(r["text"])
+            print(strip_layout(r["text"], r["type"]))
             print()
 
 
