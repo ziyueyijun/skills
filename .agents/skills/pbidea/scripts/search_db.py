@@ -7,17 +7,20 @@ Chinese comments ("获取节点值") and English function names ("Request") both
 hit — no tokenizer, no sqlite, no third-party packages, only the stdlib.
 
 Rules that matter:
-- Multiple keywords are AND-ed together (narrowing the search).
+- Words are AND-ed together (narrowing the search); explicit AND is optional.
+- OR between words splits alternatives: an object hits when any clause matches.
+- "..." marks an exact phrase: its words must appear consecutively (any
+  whitespace between them — they may even sit on different lines).
 - Matching is case-insensitive and matches anywhere in an object: source text,
   plus the pbl / object name / kind fields (like the old index did).
 - Short Chinese keywords work fine (plain substring), no special cases.
-- No boolean operators; widen or narrow by changing keywords.
 
 Usage:
     python scripts/search_db.py Request
     python scripts/search_db.py "uo_json Parse"
     python scripts/search_db.py 获取 节点
-    python scripts/search_db.py "httpclient 超时" --pages 2
+    python scripts/search_db.py "curl OR httpclient 超时"
+    python scripts/search_db.py '"datawindow child"' --pages 2
 
 Output: one line per hit — pbl/object, object type, text snippet. Add
 --pages N to also print the complete source of the top N hits so you can
@@ -38,7 +41,7 @@ for _s in (sys.stdout, sys.stderr):
     except Exception:
         pass
 
-WIDTH = 40
+WIDTH = 60
 
 # Map the Chinese kind stored in the index back to the PB export extension so
 # the --pages headers read like real file names (matches get_object.py).
@@ -68,56 +71,107 @@ def load_records():
 
 
 def make_snippet(text, terms):
-    """A short window of text around the first keyword hit, with [brackets]."""
+    """A window of raw text around the first keyword hit, with [brackets].
+
+    The window is larger after the hit than before it; when the window does not
+    start at a line boundary, it snaps forward to the next line break (within
+    the budget) so snippets do not cut words in half.
+    """
     low = text.lower()
     first = min((i for i in (low.find(t.lower()) for t in terms) if i != -1), default=None)
     if first is None:
-        return text[: 2 * WIDTH].replace("\n", " ")
+        return text[: 3 * WIDTH].replace("\n", " ")
     start = max(0, first - WIDTH)
-    end = min(len(text), first + WIDTH * 2)
+    if start > 0:
+        nl = text.rfind("\n", 0, start)
+        if nl != -1 and start - nl < WIDTH:
+            start = nl + 1
+    end = min(len(text), first + 3 * WIDTH)
     snip = text[start:end].replace("\n", " ")
     for t in sorted(terms, key=len, reverse=True):
         snip = snip.replace(t, f"[{t}]")
     return ("…" if start > 0 else "") + snip + ("…" if end < len(text) else "")
 
 
+def parse_clauses(query_args):
+    """Split the query into OR-separated clauses of AND-ed terms.
+
+    Returns clauses, each a list of terms; a term is ("w", word) for a plain
+    keyword or ("p", [words]) for a quoted phrase. A record matches when any
+    clause matches, and a clause matches when every one of its terms does.
+    """
+    tokens = re.findall(r'"[^"]*"|OR|AND|\S+', " ".join(query_args))
+    clauses, cur = [], None
+    for tok in tokens:
+        if tok.upper() == "OR":
+            cur = None
+        elif tok.upper() == "AND":
+            continue
+        elif tok.startswith('"') and len(tok) >= 2:
+            words = tok[1:-1].split()
+            if not words:
+                continue
+            if cur is None:
+                clauses.append([])
+                cur = clauses[-1]
+            cur.append(("p", words))
+        else:
+            if cur is None:
+                clauses.append([])
+                cur = clauses[-1]
+            cur.append(("w", tok))
+    return [c for c in clauses if c]
+
+
+def term_pattern(term):
+    """Matcher for one parsed term: case-insensitive substring for a word,
+    words joined by flexible whitespace for a quoted phrase."""
+    kind, val = term
+    if kind == "w":
+        return re.compile(re.escape(val), re.I)
+    return re.compile(r"\s+".join(re.escape(w) for w in val), re.I)
+
+
 def main():
     parser = argparse.ArgumentParser(description="Full-text search over pbidea_sources.txt.gz")
-    parser.add_argument("query", nargs="+", help="keywords (space-separated, AND-ed)")
+    parser.add_argument("query", nargs="+",
+                        help='keywords AND-ed; "OR" splits alternatives; "..." is an exact phrase')
     parser.add_argument("--limit", type=int, default=10, help="max hits to list (default 10, 0 = all)")
     parser.add_argument("--pages", type=int, default=0,
                         help="print full source of the top N hits (default 0 = snippets only)")
     args = parser.parse_args()
 
-    terms = []
-    for a in args.query:
-        terms.extend(a.split())
-    terms = [t.strip('"') for t in terms if t.strip('"')]
-    if not terms:
+    clauses = parse_clauses(args.query)
+    if not clauses:
         sys.exit("query is empty — give me keywords like: uo_json Parse")
 
     # Case-insensitive substring match straight on the raw text: query tokens
     # never contain whitespace, so no whitespace-folded copy is needed — and
     # str.translate over CJK text is slow (it dominated the load time).
-    pats = [re.compile(re.escape(t), re.I) for t in terms]
+    compiled = [[term_pattern(t) for t in clause] for clause in clauses]
 
     recs = load_records()
-    hits = [r for r in recs
-            if all(p.search(r["text"]) or p.search(r["head"]) for p in pats)]
+    hits = [r for r in recs if any(
+        all(p.search(r["text"]) or p.search(r["head"]) for p in clause)
+        for clause in compiled)]
     if not hits:
         print("无命中。换用更短或更典型的关键词再试（函数名、组件名、中文关键词，一次 1-3 个）。")
         return
 
     # Rank: object name matching a keyword first, then archive order.
     def name_matches(row):
-        return sum(1 for p in pats if p.search(row["filename"]))
+        return sum(1 for clause in compiled for p in clause
+                   if p.search(row["filename"]))
 
     hits.sort(key=lambda r: (-name_matches(r), r["rowid"]))
 
+    # words of every clause (phrase words included) drive snippet centering
+    snip_terms = [w for clause in clauses for kind, val in clause
+                  for w in (val if kind == "p" else [val])]
     shown = hits if args.limit == 0 else hits[:args.limit]
     for r in shown:
         print(f"{r['pbl']} / {r['filename']}  ({r['type']})")
-        print(f"    {make_snippet(r['text'], terms)}")
+        print(f"    {make_snippet(r['text'], snip_terms)}")
         print()
 
     if args.pages > 0:

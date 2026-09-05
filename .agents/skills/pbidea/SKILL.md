@@ -56,9 +56,12 @@ PbIdea 是「基于 JSON 与 WebAPI 的 PowerBuilder 接口扩展库」，核心
    python scripts/search_db.py Request
    python scripts/search_db.py "uo_json Get"
    python scripts/search_db.py 加密 签名
+   python scripts/search_db.py "curl OR httpclient 超时"
+   python scripts/search_db.py '"function boolean Parse"'
    ```
-   多个关键词默认 AND 收窄（引号可有可无）。注意：匹配按**子串**进行（大小写不敏感），
-   **不支持 AND/OR 等布尔运算符**，需要更宽/更窄搜索时直接换关键词或增减词数。命中输出
+   多个关键词默认 AND 收窄（需在同一对象内都出现）；`OR` 分隔表示任一组命中即可，用于扩查；
+   双引号圈定**连续短语**（词间空白不限、可跨行），如 `"function boolean Parse"`。匹配按
+   **子串**进行（大小写不敏感）；想更宽/更窄直接换关键词或增减词数。命中输出
    「库 / 对象名 （类型）+ 命中片段」。
 
 2. **一次取回完整上下文**。检索时加 `--pages N`，让 `search_db.py` 在打印命中片段的同时把前 N
