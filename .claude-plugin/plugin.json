@@ -1,9 +1,0 @@
-{
-  "name": "ziyueyijun-skills",
-  "version": "0.1.0",
-  "description": "Skills collection by ziyueyijun: find-skills, skill-creator, frontend-design, and engineering workflow skills. Skills live under ./skills and are namespaced as /ziyueyijun-skills:<skill-name>.",
-  "author": "ziyueyijun",
-  "license": "MIT",
-  "homepage": "https://github.com/ziyueyijun/skills",
-  "repository": "https://github.com/ziyueyijun/skills"
-}
