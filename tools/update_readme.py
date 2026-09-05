@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""重生成 README.md 的技能表(skills-table 标记区间),供 tools/sync-skills.sh 调用。
+"""重生成 README.md(英文)与 README.zh-CN.md(中文)的技能表(标记区间),供 tools/sync-skills.sh 调用。
 
-数据源:skills/*/SKILL.md 的 frontmatter(name/description);
-上游来源:skills-lock.json(name -> source),人工覆盖表 OVERRIDE 处理未在锁文件中的技能。
+数据源:skills/*/SKILL.md 的 frontmatter(name/description/disable-model-invocation);
+中文说明:tools/skill-desc-zh.json(缺失回退英文 frontmatter);
+上游来源:skills-lock.json + OVERRIDE 覆盖表。
 """
 import json
 import pathlib
@@ -12,7 +13,6 @@ import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SKILLS_DIR = ROOT / "skills"
-README = ROOT / "README.md"
 LOCK = ROOT / "skills-lock.json"
 
 # 不在 skills-lock.json 中(如插件来源/手工收录)时的来源标注
@@ -25,6 +25,30 @@ DESC_ZH = ROOT / "tools" / "skill-desc-zh.json"
 
 MARK_START = "<!-- skills-table:start -->"
 MARK_END = "<!-- skills-table:end -->"
+
+# (目标文件, 语言)
+TARGETS = [
+    (ROOT / "README.md", "en"),
+    (ROOT / "README.zh-CN.md", "zh"),
+]
+
+HEADINGS = {
+    "en": (
+        "### Manual-invoked (requires `/skill-name` or explicit request; no cost unless invoked)",
+        "### Auto-invoked (model calls when relevant)",
+    ),
+    "zh": (
+        "### 手动触发(需 `/技能名` 或显式点名;不主动调用即零开销)",
+        "### 自动触发(模型按需调用)",
+    ),
+}
+
+TABLE_HEADERS = {
+    "en": "| Skill | Description | Upstream source |",
+    "zh": "| 技能 | 说明 | 上游来源 |",
+}
+
+SEP_LINE = "|------|------|----------|"
 
 
 def frontmatter_of(skill_md: pathlib.Path) -> dict:
@@ -52,6 +76,13 @@ def load_sources() -> dict:
     return sources
 
 
+def clip(text: str, limit: int = 72) -> str:
+    text = text.replace("|", "\\|").strip()
+    if len(text) > limit:
+        return text[:limit].rstrip() + "…"
+    return text
+
+
 def collect_rows() -> list:
     rows = []
     sources = load_sources()
@@ -64,51 +95,55 @@ def collect_rows() -> list:
             continue
         fm = frontmatter_of(md)
         name = fm.get("name") or skill_dir.name
-        desc = desc_zh.get(name) or fm.get("description", "").replace("|", "\\|").strip()
-        if len(desc) > 72:
-            desc = desc[:72].rstrip() + "…"
+        desc_en = clip(fm.get("description", ""))
+        desc_zh_text = clip(desc_zh.get(name) or fm.get("description", ""))
         source = OVERRIDE.get(name) or sources.get(name, "")
         rows.append(
-            (name, desc, source, fm.get("disable-model-invocation", False))
+            {
+                "name": name,
+                "desc_en": desc_en,
+                "desc_zh": desc_zh_text,
+                "source": source,
+                "manual": fm.get("disable-model-invocation", False),
+            }
         )
     return rows
 
 
-def row_line(name: str, desc: str, source: str) -> str:
+def row_line(name: str, desc: str, source: str, lang: str) -> str:
     if source:
         cell = f"[{source}](https://github.com/{source})"
     else:
-        cell = "本仓库自建"
+        cell = "this repository" if lang == "en" else "本仓库自建"
     return f"| `{name}` | {desc} | {cell} |"
 
 
-def render_table(rows: list) -> str:
-    lines = [
-        "| 技能 | 说明 | 上游来源 |",
-        "|------|------|----------|",
-    ]
-    lines.extend(row_line(n, d, s) for n, d, s in rows)
+def render_table(rows: list, lang: str) -> str:
+    lines = [TABLE_HEADERS[lang], SEP_LINE]
+    lines.extend(
+        row_line(r["name"], r[f"desc_{lang}"], r["source"], lang) for r in rows
+    )
     return "\n".join(lines)
 
 
-def main() -> int:
-    if not README.exists():
-        print("未找到 README.md", file=sys.stderr)
+def update_file(path: pathlib.Path, rows: list, lang: str) -> int:
+    if not path.exists():
+        print(f"未找到 {path.name}", file=sys.stderr)
         return 1
-    text = README.read_text(encoding="utf-8")
+    text = path.read_text(encoding="utf-8")
     if MARK_START not in text or MARK_END not in text:
-        print("README.md 缺少技能表标记,请先添加", file=sys.stderr)
+        print(f"{path.name} 缺少技能表标记", file=sys.stderr)
         return 1
 
-    rows = collect_rows()
-    auto = sorted((r for r in rows if not r[3]), key=lambda r: r[0])
-    manual = sorted((r for r in rows if r[3]), key=lambda r: r[0])
+    auto = sorted((r for r in rows if not r["manual"]), key=lambda r: r["name"])
+    manual = sorted((r for r in rows if r["manual"]), key=lambda r: r["name"])
+    h_manual, h_auto = HEADINGS[lang]
     block = "\n\n".join(
         [
-            "### 手动触发(需 `/技能名` 或显式点名;不主动调用即零开销)",
-            render_table([r[:3] for r in manual]),
-            "### 自动触发(模型按需调用)",
-            render_table([r[:3] for r in auto]),
+            h_manual,
+            render_table(manual, lang),
+            h_auto,
+            render_table(auto, lang),
         ]
     )
     new_text = re.sub(
@@ -117,8 +152,16 @@ def main() -> int:
         text,
         flags=re.S,
     )
-    README.write_text(new_text, encoding="utf-8")
-    print(f"技能表已更新:自动 {len(auto)} 行 + 手动 {len(manual)} 行")
+    path.write_text(new_text, encoding="utf-8")
+    print(f"{path.name}:自动 {len(auto)} 行 + 手动 {len(manual)} 行")
+    return 0
+
+
+def main() -> int:
+    rows = collect_rows()
+    for path, lang in TARGETS:
+        if update_file(path, rows, lang) != 0:
+            return 1
     return 0
 
 

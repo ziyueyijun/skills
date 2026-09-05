@@ -1,89 +1,91 @@
 # skills
 
-ziyueyijun 的 AI agent 技能合集,基于开放 agent skills 生态([skills.sh](https://skills.sh)),兼容 Claude Code、Codex、Cursor 等主流 agent。
+An AI agent skills collection by ziyueyijun, built on the open agent skills ecosystem ([skills.sh](https://skills.sh)). Compatible with mainstream agents: Claude Code, Codex, Cursor, and more.
 
-## 一条命令安装全部技能
+**中文版:** [README.zh-CN.md](README.zh-CN.md)
+
+## Install all skills with one command
 
 ```bash
 npx skills add ziyueyijun/skills
 ```
 
-### 装到全局(所有项目可用)
+### Global install (available in all projects)
 
 ```bash
 npx skills add ziyueyijun/skills -g
 ```
 
-### 只装单个技能
+### Install a single skill
 
 ```bash
-npx skills add ziyueyijun/skills@<技能名>
+npx skills add ziyueyijun/skills@<skill-name>
 ```
 
-## 技能列表
+## Skills
 
 <!-- skills-table:start -->
-### 手动触发(需 `/技能名` 或显式点名;不主动调用即零开销)
+### Manual-invoked (requires `/skill-name` or explicit request; no cost unless invoked)
 
-| 技能 | 说明 | 上游来源 |
+| Skill | Description | Upstream source |
 |------|------|----------|
-| `ask-matt` | 询问哪个技能或流程适合当前场景:本仓库技能的「路由器」。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
-| `grill-me` | 用穷追不舍的提问把方案或设计想透彻(grill 系技能的手动入口)。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
-| `grill-with-docs` | grill 式追问的同时沉淀文档:顺带生成 ADR 与术语表,共建项目领域语言。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
-| `handoff` | 把当前对话压缩成一份交接文档,供另一个 agent 接手继续。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
-| `implement` | 按 spec 或一组 ticket 实现一块工作。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
-| `improve-codebase-architecture` | 扫描代码库寻找「深化模块」机会并输出可视化 HTML 报告,再对选中项逐一 grill。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
-| `setup-matt-pocock-skills` | 为工程技能配置仓库:issue 追踪器、triage 标签词表、领域文档布局;跑整套流程前先运行一次。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
-| `setup-ts-deep-modules` | 在 TS 仓库接入 dependency-cruiser,让每个包成为深模块:实现藏进子目录、仅能经接口访问。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
-| `to-spec` | 把当前对话综合成 spec 发布到项目 issue 追踪器:不追问,只整理已讨论的内容。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
-| `to-tickets` | 把计划、spec 或当前对话拆成一组「曳光弹」式 ticket,声明各自阻塞边,落到本地文件或追踪器。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
-| `triage` | 用状态机推动 issue 与外部 PR 走 triage 流程:分类、核验、必要时 grill、写出 agent 可执行的简报。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
-| `wayfinder` | 把超出单会话容量的大工程规划成共享的「决策 ticket 地图」,逐个解决直到路径清晰。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| `ask-matt` | Ask which skill or flow fits your situation. A router over the skills in… | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| `grill-me` | A relentless interview to sharpen a plan or design. | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| `grill-with-docs` | A relentless interview to sharpen a plan or design, which also creates d… | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| `handoff` | Compact the current conversation into a handoff document for another age… | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| `implement` | Implement a piece of work based on a spec or set of tickets. | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| `improve-codebase-architecture` | Scan a codebase for deepening opportunities, present them as a visual HT… | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| `setup-matt-pocock-skills` | Configure this repo for the engineering skills: set up its issue tracker… | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| `setup-ts-deep-modules` | Wire dependency-cruiser into a TypeScript repo so each package is a deep… | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| `to-spec` | Turn the current conversation into a spec and publish it to the project… | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| `to-tickets` | Break a plan, spec, or the current conversation into a set of tracer-bul… | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| `triage` | Move issues and external PRs through a state machine of triage roles, ca… | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| `wayfinder` | Plan a huge chunk of work (more than one agent session can hold) as a sh… | [mattpocock/skills](https://github.com/mattpocock/skills) |
 
-### 自动触发(模型按需调用)
+### Auto-invoked (model calls when relevant)
 
-| 技能 | 说明 | 上游来源 |
+| Skill | Description | Upstream source |
 |------|------|----------|
-| `code-review` | 按两轴审查自某基点以来的变更:是否符合仓库规范(含 Fowler 坏味道基线)、是否忠实实现源 issue/spec。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
-| `codebase-design` | 设计深模块(deep module)的共享词汇:设计或改进模块接口、寻找深化机会、确定接缝位置、提升可测试性与 AI 可导航性。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
-| `diagnosing-bugs` | 硬 bug 与性能回退的诊断循环:建立可复现反馈环、最小化、假设、插桩、修复、回归测试。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
-| `domain-modeling` | 构建并打磨项目领域模型:讨论代码库术语、编写或编辑 CONTEXT.md、记录 ADR 时使用。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
-| `find-skills` | 帮助查找并安装开放 agent 技能生态中的技能:回答「有没有做 X 的技能」「帮我找 X 技能」等需求。 | [vercel-labs/skills](https://github.com/vercel-labs/skills) |
-| `frontend-design` | 为新建或重塑 UI 提供有辨识度、有意图的视觉设计指导:美学方向、排版,避免模板化默认样式。 | [anthropics/skills](https://github.com/anthropics/skills) |
-| `git-guardrails-claude-code` | 为 Claude Code 配置 hooks,在危险 git 命令(push、reset --hard、clean、branch -D 等)执行… | [mattpocock/skills](https://github.com/mattpocock/skills) |
-| `grilling` | 对方案、决策、想法穷追不舍地提问以压力测试思路;grill-me、triage、wayfinder 等共用的底层原语。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
-| `prototype` | 做一次性原型回答设计问题:状态或逻辑用单个共享 HTML,UI 探索用可切换的多方案变体。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
-| `research` | 以高信任一手来源调研问题,结论写成带引用的 Markdown 文件入库,可由后台 agent 执行。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
-| `resolving-merge-conflicts` | 逐 hunk 解决进行中的 git merge/rebase 冲突,按意图回溯冲突双方源头,完成后收尾(不 abort)。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
-| `setup-pre-commit` | 在仓库配置 Husky 预提交钩子:lint-staged(Prettier)+ 类型检查 + 测试。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
-| `skill-creator` | 创建、修改与优化技能并评测性能:从零写技能、跑 eval 测试、方差分析基准、优化描述提升触发准确率。 | [anthropics/skills](https://github.com/anthropics/skills) |
-| `tdd` | 测试驱动开发:先写失败测试再修复(red-green-refactor),一次一个垂直切片。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
-| `wizard` | 生成交互式 bash 向导,引导人类完成只有他们能做的步骤:基础设施、凭据、CI 机密、陌生后台或一次性迁移。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| `code-review` | Review the changes since a fixed point (commit, branch, tag, or merge-ba… | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| `codebase-design` | Shared vocabulary for designing deep modules. Use when the user wants to… | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| `diagnosing-bugs` | Diagnosis loop for hard bugs and performance regressions. Use when the u… | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| `domain-modeling` | Build and sharpen a project's domain model. Use when discussing codebase… | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| `find-skills` | Helps users discover and install agent skills when they ask questions li… | [vercel-labs/skills](https://github.com/vercel-labs/skills) |
+| `frontend-design` | Guidance for distinctive, intentional visual design when building new UI… | [anthropics/skills](https://github.com/anthropics/skills) |
+| `git-guardrails-claude-code` | Set up Claude Code hooks to block dangerous git commands (push, reset --… | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| `grilling` | Grill the user relentlessly about a plan, decision, or idea. Use when th… | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| `prototype` | Build a throwaway prototype to answer a design question. Use when the us… | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| `research` | Investigate a question against high-trust primary sources and capture th… | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| `resolving-merge-conflicts` | Use when you need to resolve an in-progress git merge/rebase conflict. | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| `setup-pre-commit` | Set up Husky pre-commit hooks with lint-staged (Prettier), type checking… | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| `skill-creator` | Create new skills, modify and improve existing skills, and measure skill… | [anthropics/skills](https://github.com/anthropics/skills) |
+| `tdd` | Test-driven development. Use when the user wants to build features or fi… | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| `wizard` | Generate an interactive bash wizard that walks a human through steps onl… | [mattpocock/skills](https://github.com/mattpocock/skills) |
 <!-- skills-table:end -->
 
-> 技能表由 [tools/sync-skills.sh](tools/sync-skills.sh) 自动维护,请勿手改标记区间内内容。
+> The skill tables above are auto-maintained by [tools/sync-skills.sh](tools/sync-skills.sh); do not hand-edit anything between the markers.
 
-## 目录结构
+## Repository layout
 
-- `skills/<技能名>/SKILL.md` — 发布布局,`npx skills add ziyueyijun/skills` 可自动发现
-- `.agents/skills/`、`.claude/skills/` — 安装态真实副本(clone 后开箱即用)
-- `rules/AGENTS.zh.md` / `rules/AGENTS.md` — 通用 agent 规则(中文版 / English version)
-- `tools/sync-skills.sh` + `tools/update_readme.py` — 镜像同步与技能表自动更新
-- `skills-lock.json` — 技能来源记录(README 表格的数据源)
+- `skills/<skill-name>/SKILL.md` — publish layout, discovered by `npx skills add ziyueyijun/skills`
+- `.agents/skills/`, `.claude/skills/` — real install copies (usable immediately after clone)
+- `rules/AGENTS.md` / `rules/AGENTS.zh.md` — general agent rules (English / Chinese)
+- `tools/sync-skills.sh` + `tools/update_readme.py` — mirror sync & auto table regeneration (updates both READMEs)
+- `skills-lock.json` — upstream source records (data source for the README tables)
 
-## 通用规则
+## General agent rules
 
-[rules/AGENTS.zh.md](rules/AGENTS.zh.md)(中文版)/ [rules/AGENTS.md](rules/AGENTS.md)(English)是一份可直接使用的 agent 通用规则(核心原则:不编造、先证据;含安全与破坏性操作底线、冲突裁决、运行模式等)。「底线」建议全盘保留,「偏好」可按需裁剪。内容不依赖任何工具专属语法。
+[rules/AGENTS.md](rules/AGENTS.md) is a ready-to-use set of general agent rules (core principles: never fabricate, evidence first; includes safety bottom lines for destructive operations, conflict resolution, operating modes, etc.). Keep the Hard Rules sections as-is; trim the Preferences section as needed. The content uses no tool-specific syntax.
 
-注意:规则文件本身通用,但**各工具读取的文件名不同**——Claude Code 只读 `CLAUDE.md`,Codex 只读 `AGENTS.md`(二者均不读取对方文件名,此差异已在官方文档/源码验证)。按目标工具放置:
+Note: the rules file itself is tool-agnostic, but **each tool reads a different filename** — Claude Code reads `CLAUDE.md` only, Codex reads `AGENTS.md` only (neither reads the other's filename; verified against official docs / source code). Place it per your target tool:
 
-| 目标 | 放置位置 | 命令 |
+| Target | Location | Command |
 |---|---|---|
-| Claude Code(全局) | `~/.claude/CLAUDE.md` | `cp rules/AGENTS.md ~/.claude/CLAUDE.md` |
-| Claude Code(单个项目) | 项目根 `CLAUDE.md` | 把规则复制为项目根 `AGENTS.md`,再在 CLAUDE.md 顶部加一行 `@AGENTS.md` import(官方推荐,双工具共用一份) |
-| Codex(全局) | `~/.codex/AGENTS.md` | `cp rules/AGENTS.md ~/.codex/AGENTS.md` |
-| Codex(单个项目) | 项目根 `AGENTS.md` | 直接放入项目根即可 |
+| Claude Code (global) | `~/.claude/CLAUDE.md` | `cp rules/AGENTS.md ~/.claude/CLAUDE.md` |
+| Claude Code (single project) | project-root `CLAUDE.md` | Copy the rules to project-root `AGENTS.md`, then add a line `@AGENTS.md` at the top of your CLAUDE.md (official pattern — both tools share one copy) |
+| Codex (global) | `~/.codex/AGENTS.md` | `cp rules/AGENTS.md ~/.codex/AGENTS.md` |
+| Codex (single project) | project-root `AGENTS.md` | Drop the file at the project root |
 
-## 许可
+## License
 
-根目录 MIT License 适用于本仓库自有的编排内容;各技能目录保留各自上游的 LICENSE 文件。`skills/` 下的 mattpocock 系技能来自 [mattpocock/skills](https://github.com/mattpocock/skills),Copyright (c) 2026 Matt Pocock,MIT License 发布。
+The root MIT License covers this repository's own curated content; each skill directory keeps its upstream LICENSE file. The mattpocock skills under `skills/` come from [mattpocock/skills](https://github.com/mattpocock/skills), Copyright (c) 2026 Matt Pocock, released under the MIT License.
