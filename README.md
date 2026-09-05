@@ -26,6 +26,7 @@ npx skills add ziyueyijun/skills@<技能名>
 |------|------|----------|
 | `find-skills` | 从开放技能生态查找并安装技能 | [vercel-labs/skills](https://github.com/vercel-labs/skills) |
 | `skill-creator` | 创建、改进技能并评测性能 | [anthropics/skills](https://github.com/anthropics/skills) |
+| `frontend-design` | 前端视觉设计指导:排版、配色、避免模板化 | [anthropics/skills](https://github.com/anthropics/skills) |
 
 ## 目录结构
 
