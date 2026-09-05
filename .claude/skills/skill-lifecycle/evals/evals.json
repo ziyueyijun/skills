@@ -1,0 +1,50 @@
+{
+  "skill_name": "skill-lifecycle",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "终于搞定了!这 ESP32 BLE 断连问题折腾了我三个小时——MTU 协商时序不对,必须先做完 service discovery 再设 MTU,顺序反了就连上几秒就掉。这坑估计以后换块板子还会踩,真想把它记下来。",
+      "expected_output": "任务收尾回复:总结+在末尾提议把解法沉淀成技能,给出理由(还会再遇到、有非显然的坑),提炼关键坑与步骤,不代建文件。",
+      "files": [],
+      "expectations": [
+        "proposes_skill_creation: 回复向用户提议把这次解法沉淀成技能(或明确问\"要不要做成技能记下来\"),而非只做总结。",
+        "names_concrete_pitfall: 明确点出核心坑:MTU 协商时序(先 service discovery 再设 MTU)。",
+        "gives_worthiness_reason: 给出值得沉淀的理由(与\"以后还会遇到/坑会重演\"挂钩),而非无条件建议建技能。",
+        "no_unrequested_artifact: 未经用户同意未创建技能文件或任何其他新文件。"
+      ]
+    },
+    {
+      "id": 1,
+      "prompt": "刚才那台老服务器你按 deploy-skill 的步骤弄半天才上去——那技能里有两步是给新环境写的,对老服务器根本不对。我们以后主要都碰老服务器了,技能要不要改?",
+      "expected_output": "识别技能过时且属于长期变化,提议更新技能:指出过时的具体部分、改法、依据,未经同意不改文件。",
+      "files": [],
+      "expectations": [
+        "recognizes_drift_needs_update: 识别出 deploy-skill 对该场景已过时,且因\"以后主要碰老服务器\"判断需要更新技能(而非仅当作一次性特例绕开)。",
+        "distinguishes_permanent_from_oneoff: 明确区分长期变化(会复现)与一次性变通,并据此下结论。",
+        "proposes_concrete_change: 指出技能中哪一部分过时(哪两步/什么环境假设)及改法方向。",
+        "no_unrequested_edit: 未经用户明确同意未直接改写任何技能文件。"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "解决了!是我把时区配错了,改成 UTC+8 就好了。这次倒是快,没绕弯路。",
+      "expected_output": "不提议建技能:一次性单点排查,回复简短,不打扰。",
+      "files": [],
+      "expectations": [
+        "no_skill_proposal: 未建议把这次排查沉淀成技能,未给出建技能提议或候选技能名称。",
+        "keeps_reply_short: 若提及不值得的理由,说明是一次性问题/无复杂坑,不做长篇论证。"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "这个解析 PDF 报表的脚本调通真费劲,又是字体缺失又是编码问题。你说这种值不值得沉淀成技能?",
+      "expected_output": "按判据作答:明确结论+理由,先考虑现有 PDF 技能覆盖再下判断,不无视查重。",
+      "files": [],
+      "expectations": [
+        "gives_clear_verdict: 给出明确判断(值得/不值得/有条件值得),并附理由。",
+        "considers_existing_coverage: 判断前考虑现有技能是否已覆盖(PDF 类技能存在与否),而非无视查重直接答建或不建。",
+        "verdict_based_on_criteria: 结论锚定判据:这事以后会不会再遇到、坑是否非显然、是否有现成技能覆盖。"
+      ]
+    }
+  ]
+}
