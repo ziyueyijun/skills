@@ -32,10 +32,14 @@ def frontmatter_of(skill_md: pathlib.Path) -> dict:
     m = re.search(r"^---\n(.*?)\n---", text, re.S | re.M)
     fm = m.group(1) if m else ""
     result = {}
-    for key in ("name", "description"):
+    for key in ("name", "description", "disable-model-invocation"):
         km = re.search(rf"^{key}:\s*(.+)$", fm, re.M)
         if km:
-            result[key] = km.group(1).strip().strip('"').strip("'")
+            value = km.group(1).strip()
+            if key == "disable-model-invocation":
+                result[key] = value == "true"
+            else:
+                result[key] = value.strip('"').strip("'")
     return result
 
 
@@ -64,7 +68,9 @@ def collect_rows() -> list:
         if len(desc) > 72:
             desc = desc[:72].rstrip() + "…"
         source = OVERRIDE.get(name) or sources.get(name, "")
-        rows.append((name, desc, source))
+        rows.append(
+            (name, desc, source, fm.get("disable-model-invocation", False))
+        )
     return rows
 
 
@@ -74,6 +80,15 @@ def row_line(name: str, desc: str, source: str) -> str:
     else:
         cell = "本仓库自建"
     return f"| `{name}` | {desc} | {cell} |"
+
+
+def render_table(rows: list) -> str:
+    lines = [
+        "| 技能 | 说明 | 上游来源 |",
+        "|------|------|----------|",
+    ]
+    lines.extend(row_line(n, d, s) for n, d, s in rows)
+    return "\n".join(lines)
 
 
 def main() -> int:
@@ -86,21 +101,24 @@ def main() -> int:
         return 1
 
     rows = collect_rows()
-    table = "\n".join(
+    auto = sorted((r for r in rows if not r[3]), key=lambda r: r[0])
+    manual = sorted((r for r in rows if r[3]), key=lambda r: r[0])
+    block = "\n\n".join(
         [
-            "| 技能 | 说明 | 上游来源 |",
-            "|------|------|----------|",
-            *(row_line(n, d, s) for n, d, s in rows),
+            "### 自动触发(模型按需调用)",
+            render_table([r[:3] for r in auto]),
+            "### 手动触发(需 `/技能名` 或显式点名;不主动调用即零开销)",
+            render_table([r[:3] for r in manual]),
         ]
     )
     new_text = re.sub(
         re.escape(MARK_START) + r".*?" + re.escape(MARK_END),
-        MARK_START + "\n" + table + "\n" + MARK_END,
+        MARK_START + "\n" + block + "\n" + MARK_END,
         text,
         flags=re.S,
     )
     README.write_text(new_text, encoding="utf-8")
-    print(f"技能表已更新:{len(rows)} 行")
+    print(f"技能表已更新:自动 {len(auto)} 行 + 手动 {len(manual)} 行")
     return 0
 
 
