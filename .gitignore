@@ -1,0 +1,4 @@
+# npx skills 本机安装态(技能源仓库不提交安装副本)
+.agents/
+.claude/
+skills-lock.json
