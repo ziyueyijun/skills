@@ -23,6 +23,23 @@ npx skills add ziyueyijun/skills@<技能名>
 ## 技能列表
 
 <!-- skills-table:start -->
+### 手动触发(需 `/技能名` 或显式点名;不主动调用即零开销)
+
+| 技能 | 说明 | 上游来源 |
+|------|------|----------|
+| `ask-matt` | 询问哪个技能或流程适合当前场景:本仓库技能的「路由器」。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| `grill-me` | 用穷追不舍的提问把方案或设计想透彻(grill 系技能的手动入口)。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| `grill-with-docs` | grill 式追问的同时沉淀文档:顺带生成 ADR 与术语表,共建项目领域语言。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| `handoff` | 把当前对话压缩成一份交接文档,供另一个 agent 接手继续。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| `implement` | 按 spec 或一组 ticket 实现一块工作。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| `improve-codebase-architecture` | 扫描代码库寻找「深化模块」机会并输出可视化 HTML 报告,再对选中项逐一 grill。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| `setup-matt-pocock-skills` | 为工程技能配置仓库:issue 追踪器、triage 标签词表、领域文档布局;跑整套流程前先运行一次。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| `setup-ts-deep-modules` | 在 TS 仓库接入 dependency-cruiser,让每个包成为深模块:实现藏进子目录、仅能经接口访问。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| `to-spec` | 把当前对话综合成 spec 发布到项目 issue 追踪器:不追问,只整理已讨论的内容。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| `to-tickets` | 把计划、spec 或当前对话拆成一组「曳光弹」式 ticket,声明各自阻塞边,落到本地文件或追踪器。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| `triage` | 用状态机推动 issue 与外部 PR 走 triage 流程:分类、核验、必要时 grill、写出 agent 可执行的简报。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
+| `wayfinder` | 把超出单会话容量的大工程规划成共享的「决策 ticket 地图」,逐个解决直到路径清晰。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
+
 ### 自动触发(模型按需调用)
 
 | 技能 | 说明 | 上游来源 |
@@ -42,23 +59,6 @@ npx skills add ziyueyijun/skills@<技能名>
 | `skill-creator` | 创建、修改与优化技能并评测性能:从零写技能、跑 eval 测试、方差分析基准、优化描述提升触发准确率。 | [anthropics/skills](https://github.com/anthropics/skills) |
 | `tdd` | 测试驱动开发:先写失败测试再修复(red-green-refactor),一次一个垂直切片。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
 | `wizard` | 生成交互式 bash 向导,引导人类完成只有他们能做的步骤:基础设施、凭据、CI 机密、陌生后台或一次性迁移。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
-
-### 手动触发(需 `/技能名` 或显式点名;不主动调用即零开销)
-
-| 技能 | 说明 | 上游来源 |
-|------|------|----------|
-| `ask-matt` | 询问哪个技能或流程适合当前场景:本仓库技能的「路由器」。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
-| `grill-me` | 用穷追不舍的提问把方案或设计想透彻(grill 系技能的手动入口)。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
-| `grill-with-docs` | grill 式追问的同时沉淀文档:顺带生成 ADR 与术语表,共建项目领域语言。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
-| `handoff` | 把当前对话压缩成一份交接文档,供另一个 agent 接手继续。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
-| `implement` | 按 spec 或一组 ticket 实现一块工作。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
-| `improve-codebase-architecture` | 扫描代码库寻找「深化模块」机会并输出可视化 HTML 报告,再对选中项逐一 grill。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
-| `setup-matt-pocock-skills` | 为工程技能配置仓库:issue 追踪器、triage 标签词表、领域文档布局;跑整套流程前先运行一次。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
-| `setup-ts-deep-modules` | 在 TS 仓库接入 dependency-cruiser,让每个包成为深模块:实现藏进子目录、仅能经接口访问。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
-| `to-spec` | 把当前对话综合成 spec 发布到项目 issue 追踪器:不追问,只整理已讨论的内容。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
-| `to-tickets` | 把计划、spec 或当前对话拆成一组「曳光弹」式 ticket,声明各自阻塞边,落到本地文件或追踪器。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
-| `triage` | 用状态机推动 issue 与外部 PR 走 triage 流程:分类、核验、必要时 grill、写出 agent 可执行的简报。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
-| `wayfinder` | 把超出单会话容量的大工程规划成共享的「决策 ticket 地图」,逐个解决直到路径清晰。 | [mattpocock/skills](https://github.com/mattpocock/skills) |
 <!-- skills-table:end -->
 
 > 技能表由 [tools/sync-skills.sh](tools/sync-skills.sh) 自动维护,请勿手改标记区间内内容。

@@ -105,10 +105,10 @@ def main() -> int:
     manual = sorted((r for r in rows if r[3]), key=lambda r: r[0])
     block = "\n\n".join(
         [
-            "### 自动触发(模型按需调用)",
-            render_table([r[:3] for r in auto]),
             "### 手动触发(需 `/技能名` 或显式点名;不主动调用即零开销)",
             render_table([r[:3] for r in manual]),
+            "### 自动触发(模型按需调用)",
+            render_table([r[:3] for r in auto]),
         ]
     )
     new_text = re.sub(
