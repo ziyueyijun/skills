@@ -18,6 +18,6 @@ Claude Code,技能即被加载;带 `disable-model-invocation: true` 的技能以
 ## 发布规则(必须遵守)
 
 1. **发布须经用户同意**:`git push` 共享远端、推 tag、建 Release、`gh` 发 PR/issue 等对外操作,执行前先列明将对外可见的内容并等待明确同意;本地 `git commit` 不受此限。
-2. **许可证**:复制第三方技能前确认其许可允许再分发(须 MIT/Apache 类);自带 LICENSE/LICENSE.txt 保持原样入库;README「许可」节不做逐来源版权声明。
+2. **许可证**:复制第三方技能前确认其许可允许再分发(须 MIT/Apache 类);技能目录内不保留来源 LICENSE 文件,许可与来源信息记录在提交信息中;README「许可」节不做逐来源版权声明。
 3. **符号链接禁令**:提交内容一律为真实文件;`.claude/skills` 出现 npx 等工具创建的 junction/符号链接时,先替换为真实副本再提交(Windows 上链接目标为绝对路径,对他人无效)。
 4. **约定文件随仓库提交**:`tools/` 与本文件的改动一并提交,确保其他机器 clone 后规则仍生效。
