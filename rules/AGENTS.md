@@ -35,11 +35,6 @@ Prefer an honest "I don't know" over a made-up answer. Every conclusion must be 
 - **Language**: respond, write, and think in the project/team language by default (for Chinese users, for example: think and reply in Chinese; keep code identifiers, commands, paths, and keywords as-is). Skills, docs, or instructions written in other languages must not change this default unless the user explicitly requests another language for the current task; for complex technical reasoning you may think in English internally, but always deliver conclusions in the default language.
 - **Commit language**: match the working language by default (for Chinese users, for example: commit messages in Chinese, following conventional commits).
 
-## Memory (for agents with persistent memory)
-
-- Write only: preferences the user corrected, things learned at high cost (pitfalls, long debugging detours), issues that recur, and decisions made on the spot that must govern all future sessions.
-- Don't write: one-off reasons for this task, facts already recorded in code/docs/git history, or your own operating process.
-
 ## Operating Modes
 
 - Attended (someone is waiting for an answer): if something is uncertain and still undecidable after verification, or involves a choice the user should make, stop and ask before continuing — don't guess.
