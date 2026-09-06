@@ -29,5 +29,8 @@
   "triage": "用状态机推动 issue 与外部 PR 走 triage 流程:分类、核验、必要时 grill、写出 agent 可执行的简报。",
   "wayfinder": "把超出单会话容量的大工程规划成共享的「决策 ticket 地图」,逐个解决直到路径清晰。",
   "wizard": "生成交互式 bash 向导,引导人类完成只有他们能做的步骤:基础设施、凭据、CI 机密、陌生后台或一次性迁移。",
-  "playwright-best-practices": "Playwright 测试全套最佳实践参考(currents.dev,57 篇):编写与调试测试、修复 flaky、locator 与断言、Page Object、fixtures、网络拦截与 mock、认证、可视化回归、可访问性、安全、性能、Electron 与浏览器扩展测试、CI/CD 配置;按当前任务查表取用,TypeScript 示例。"
+  "playwright-best-practices": "Playwright 测试全套最佳实践参考(currents.dev,57 篇):编写与调试测试、修复 flaky、locator 与断言、Page Object、fixtures、网络拦截与 mock、认证、可视化回归、可访问性、安全、性能、Electron 与浏览器扩展测试、CI/CD 配置;按当前任务查表取用,TypeScript 示例。",
+  "vitest": "Vitest 快速单元测试框架(Vite 驱动、兼容 Jest API)官方参考:写测试、mock、配置覆盖率、测试过滤与 fixtures 时使用。",
+  "vue": "Vue 3 组合式 API、script setup 宏、响应式系统与内置组件官方参考:编写 Vue SFC、defineProps/defineEmits/defineModel、watcher 或使用 Transition/Teleport/Suspense/KeepAlive 时使用。",
+  "vercel-react-best-practices": "React 与 Next.js 性能优化指南(Vercel 工程团队出品):编写、评审或重构 React/Next.js 代码时使用,触发于 React 组件、Next.js 页面、数据获取、包体优化或性能改进任务。"
 }
