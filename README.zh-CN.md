@@ -49,6 +49,7 @@ CLI 会把技能写入项目的 `.agents/skills/`,并为 Claude Code 及其支�
 | `improve-codebase-architecture` | 扫描代码库寻找「深化模块」机会并输出可视化 HTML 报告,再对选中项逐一 grill。 |
 | `pbidea` | PbIdea 框架 API 查询技能,由 /pbidea 手动触发:uo_json(JSON 解析/生成/与 DataWindow 互转)、uo… |
 | `powerbuilder` | PowerBuilder 官方开发文档查询技能,由 /powerbuilder 手动触发:PowerScript 语言(语法/语句/事件/函数/… |
+| `search` | research 的手动变体,由 /search 触发:只查一手官方资料,结论直接答在对话里、逐条附来源,不写任何文件;要落盘成 Markdow… |
 
 ### 自动触发(模型按需调用)
 
@@ -75,9 +76,44 @@ CLI 会把技能写入项目的 `.agents/skills/`,并为 Claude Code 及其支�
 ## 目录结构
 
 - `.claude/skills/<技能名>/SKILL.md` — 唯一的技能目录;在本仓库内打开 Claude Code 即从此加载
+- `.mcp.json` — 本仓库开发用的 MCP 服务器配置(github / context7),凭据只以 `${VAR}` 占位、不存明文,见下节
 - `tools/update_readme.py` + `tools/skill-desc-zh.json` — 技能表重新生成(中文说明映射)
 - `rules/AGENTS.md` / `rules/AGENTS.zh.md` — 通用 agent 规则(English / 中文版)
 - `skills-lock.json` — `npx skills` 安装记录(每个技能的来源与内容哈希)
+- `settings.json` — 作者本人 Claude Code 用户配置的参考副本(Claude Code 不会加载它,见下节)
+
+## Claude Code 配置参考
+
+根目录的 [settings.json](settings.json) 是作者本人的 Claude Code 用户配置,作为参考副本留在仓库,供想了解如何配置 permissions、deny 规则与 env 覆盖项的读者借鉴。**Claude Code 不会读取仓库根目录的 `settings.json`** —— 它只从 `~/.claude/settings.json`(用户级,作用于所有项目)与 `<项目根>/.claude/settings.json`(项目级,须位于项目 `.claude/` 目录内)加载配置。文件中的 `env` 段是本机专属配置(本地代理端点与模型重映射),直接照抄在其他机器上不会生效,请按需裁剪。
+
+## MCP 配置
+
+[.mcp.json](.mcp.json) 为仓库开发提供两个 MCP 服务器:github(GitHub 操作)、context7(第三方库文档查询)。**凭据不以明文入库**:文件里只写 `${VAR}` 占位符,启动时由 Claude Code 从进程环境展开。
+
+配置流程:
+
+1. 项目里有 `.mcp.json` 即可(本仓库自带占位符版本,可直接提交,不含任何密钥)。
+2. 准备各站点的 token:GitHub 的 fine-grained 或 classic PAT、context7 的 API key。
+3. 把真实值写进 `~/.claude/settings.json`(用户级配置,不入库)的 `env` 段,例如:
+
+   ```json
+   {
+     "env": {
+       "GITHUB_PAT": "github_pat_真实token",
+       "CONTEXT7_API_KEY": "ctx7sk-真实key"
+     }
+   }
+   ```
+
+   `env` 段由 Claude Code 启动时注入进程环境——与操作系统环境变量等效(优先级高于 shell 导出值,且只对 Claude Code 及其子进程可见),`.mcp.json` 里的 `${VAR}` 即从中展开;还支持默认值语法 `${VAR:-默认值}`。
+4. 重启 Claude Code 使环境变量生效(在会话启动时注入);用 `claude mcp list` 可查看服务器状态与缺失变量告警。
+
+要点:
+
+- **无需 `.env` 文件**:Claude Code 不会自动加载项目根目录的 `.env`,变量只认进程环境(shell 导出或 settings 的 `env` 段)。
+- 变量缺失不阻止加载:启动时告警,请求会携带字面 `${VAR}`(鉴权失败是「响亮」的,便于排查,不会静默出错)。
+- 本仓库根目录 [settings.json](settings.json) 参考副本不含 token;真实值只存在于你的用户级 `~/.claude/settings.json`。
+- token 若曾外泄(误提交、明文贴进对话等),去站点后台轮换后同步更新 settings 即可。
 
 ## 通用规则
 

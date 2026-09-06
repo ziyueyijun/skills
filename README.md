@@ -49,6 +49,7 @@ The CLI writes the skill into the project's `.agents/skills/` and symlinks it fo
 | `improve-codebase-architecture` | Scan a codebase for deepening opportunities, present them as a visual HT… |
 | `pbidea` | PbIdea framework API lookup skill, triggered manually via /pbidea. Cover… |
 | `powerbuilder` | PowerBuilder official documentation lookup skill, triggered manually via… |
+| `search` | Manual fact-checking companion to research, triggered only by explicit `… |
 
 ### Auto-invoked (model calls when relevant)
 
@@ -75,9 +76,44 @@ The CLI writes the skill into the project's `.agents/skills/` and symlinks it fo
 ## Repository layout
 
 - `.claude/skills/<skill-name>/SKILL.md` — the one and only skills directory; Claude Code loads skills from it when running in this repo
+- `.mcp.json` — MCP servers used when developing in this repo (github / context7); credentials are `${VAR}` placeholders only, never plaintext — see below
 - `tools/update_readme.py` + `tools/skill-desc-zh.json` — skill-table regeneration (Chinese descriptions)
 - `rules/AGENTS.md` / `rules/AGENTS.zh.md` — general agent rules (English / Chinese)
 - `skills-lock.json` — install records kept by `npx skills` (source + content hash per skill)
+- `settings.json` — reference copy of the author's Claude Code user config (not loaded by Claude Code; see below)
+
+## Claude Code settings reference
+
+[settings.json](settings.json) at the repository root is the author's own Claude Code user configuration, kept here as a reference copy for readers who want to see how permissions, deny rules and env overrides can be set up. **Claude Code does not read a `settings.json` at the repository root** — it loads settings only from `~/.claude/settings.json` (user-wide, applies to every project) and `<project>/.claude/settings.json` (project-wide; must live inside the project's `.claude/` directory). The `env` section is machine-specific (a local proxy endpoint and model remapping) and will not work as-is on another machine — copy selectively.
+
+## MCP configuration
+
+[.mcp.json](.mcp.json) wires up two MCP servers for development in this repo: github (GitHub operations) and context7 (third-party library docs). **Credentials are never committed in plaintext** — the file holds only `${VAR}` placeholders, expanded by Claude Code from the process environment at startup.
+
+Setup steps:
+
+1. Have an `.mcp.json` in the project — this repo ships a placeholder version that is safe to commit (it contains no secrets).
+2. Obtain a token from each service: a GitHub fine-grained or classic PAT, and a Context7 API key.
+3. Put the real values in the `env` block of `~/.claude/settings.json` (user-level settings — never in committed files), e.g.:
+
+   ```json
+   {
+     "env": {
+       "GITHUB_PAT": "github_pat_your-token",
+       "CONTEXT7_API_KEY": "ctx7sk_your-key"
+     }
+   }
+   ```
+
+   Claude Code injects the `env` block into the process environment at startup — equivalent to OS environment variables (it overrides shell exports and is visible only to Claude Code and its subprocesses); `${VAR}` in `.mcp.json` expands from there. A default-value form is also supported: `${VAR:-default}`.
+4. Restart Claude Code for the variables to take effect (they are read when a session starts); `claude mcp list` shows server status and missing-variable warnings.
+
+Notes:
+
+- **No `.env` file needed** — Claude Code does not auto-load one from the project root; variables must come from the process environment (a shell export or a settings `env` block).
+- A missing variable does not block loading: you get a startup warning and requests carry the literal `${VAR}` (authentication fails loudly rather than silently misbehaving).
+- The reference [settings.json](settings.json) copy at the repo root contains no tokens; real values live only in your user-level `~/.claude/settings.json`.
+- If a token was ever exposed (committed by accident, pasted into a chat in plaintext, …), rotate it at the service and update the settings.
 
 ## General agent rules
 

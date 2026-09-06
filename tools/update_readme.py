@@ -63,19 +63,37 @@ TABLE_HEADERS = {
 SEP_LINE = "|------|------|"
 
 
+# YAML 块标量指示符(`description: >-` 折叠 / `|` 字面);表格单元格只取裁剪前缀,统一以空格拼接续行
+BLOCK_INDICATORS = {">", ">-", ">+", "|", "|-", "|+"}
+
+
 def frontmatter_of(skill_md: pathlib.Path) -> dict:
     text = skill_md.read_text(encoding="utf-8", errors="replace")
     m = re.search(r"^---\n(.*?)\n---", text, re.S | re.M)
     fm = m.group(1) if m else ""
+    lines = fm.splitlines()
     result = {}
     for key in ("name", "description", "disable-model-invocation"):
-        km = re.search(rf"^{key}:\s*(.+)$", fm, re.M)
-        if km:
+        for i, line in enumerate(lines):
+            km = re.match(rf"^{key}:\s*(.*)$", line)
+            if not km:
+                continue
             value = km.group(1).strip()
             if key == "disable-model-invocation":
                 result[key] = value == "true"
+            elif value in BLOCK_INDICATORS:
+                parts = []
+                for nxt in lines[i + 1 :]:
+                    if nxt[:1] in (" ", "\t") and nxt.strip():
+                        parts.append(nxt.strip())
+                    elif not nxt.strip():  # 块内空行(段落分隔)跳过
+                        continue
+                    else:
+                        break
+                result[key] = " ".join(parts)
             else:
                 result[key] = value.strip('"').strip("'")
+            break
     return result
 
 

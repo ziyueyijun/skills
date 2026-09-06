@@ -18,6 +18,7 @@
   "prototype": "做一次性原型回答设计问题:状态或逻辑用单个共享 HTML,UI 探索用可切换的多方案变体。",
   "research": "以高信任一手来源调研问题,结论写成带引用的 Markdown 文件入库,可由后台 agent 执行。",
   "resolving-merge-conflicts": "逐 hunk 解决进行中的 git merge/rebase 冲突,按意图回溯冲突双方源头,完成后收尾(不 abort)。",
+  "search": "research 的手动变体,由 /search 触发:只查一手官方资料,结论直接答在对话里、逐条附来源,不写任何文件;要落盘成 Markdown 时用 research。",
   "setup-matt-pocock-skills": "为工程技能配置仓库:issue 追踪器、triage 标签词表、领域文档布局;跑整套流程前先运行一次。",
   "setup-pre-commit": "在仓库配置 Husky 预提交钩子:lint-staged(Prettier)+ 类型检查 + 测试。",
   "setup-ts-deep-modules": "在 TS 仓库接入 dependency-cruiser,让每个包成为深模块:实现藏进子目录、仅能经接口访问。",
