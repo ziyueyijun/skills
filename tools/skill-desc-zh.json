@@ -33,5 +33,6 @@
   "vitest": "Vitest 快速单元测试框架(Vite 驱动、兼容 Jest API)官方参考:写测试、mock、配置覆盖率、测试过滤与 fixtures 时使用。",
   "vue": "Vue 3 组合式 API、script setup 宏、响应式系统与内置组件官方参考:编写 Vue SFC、defineProps/defineEmits/defineModel、watcher 或使用 Transition/Teleport/Suspense/KeepAlive 时使用。",
   "vercel-react-best-practices": "React 与 Next.js 性能优化指南(Vercel 工程团队出品):编写、评审或重构 React/Next.js 代码时使用,触发于 React 组件、Next.js 页面、数据获取、包体优化或性能改进任务。",
-  "shadcn": "shadcn 官方技能:管理与构建 shadcn/ui 组件和项目——添加、搜索、修复、调试、样式、组合 UI(含聊天界面),提供项目上下文、组件文档与用法示例;适用于 components.json、组件注册表、preset 代码等场景,以及 shadcn init、用 --preset 创建应用、切换 preset 等操作。"
+  "shadcn": "shadcn 官方技能:管理与构建 shadcn/ui 组件和项目——添加、搜索、修复、调试、样式、组合 UI(含聊天界面),提供项目上下文、组件文档与用法示例;适用于 components.json、组件注册表、preset 代码等场景,以及 shadcn init、用 --preset 创建应用、切换 preset 等操作。",
+  "impeccable": "前端界面设计引擎(pbakaus/impeccable 官方,Apache-2.0):设计、重设计、打磨、评审、审计等界面任务会自动触发,也可用 /impeccable 手动调用;引擎按规则检测并驱动整套命令(init/document/critique/polish/...),为项目维护 PRODUCT.md 与 DESIGN.md 规范文档。"
 }
