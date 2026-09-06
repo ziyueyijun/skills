@@ -67,6 +67,7 @@ CLI 会把技能写入项目的 `.agents/skills/`,并为 Claude Code 及其支�
 | `research` | 以高信任一手来源调研问题,结论写成带引用的 Markdown 文件入库,可由后台 agent 执行。 |
 | `resolving-merge-conflicts` | 逐 hunk 解决进行中的 git merge/rebase 冲突,按意图回溯冲突双方源头,完成后收尾(不 abort)。 |
 | `setup-pre-commit` | 在仓库配置 Husky 预提交钩子:lint-staged(Prettier)+ 类型检查 + 测试。 |
+| `shadcn` | shadcn 官方技能:管理与构建 shadcn/ui 组件和项目——添加、搜索、修复、调试、样式、组合 UI(含聊天界面),提供项目上下文、组… |
 | `skill-creator` | 创建、修改与优化技能并评测性能:从零写技能、跑 eval 测试、方差分析基准、优化描述提升触发准确率。 |
 | `tdd` | 测试驱动开发:先写失败测试再修复(red-green-refactor),一次一个垂直切片。 |
 | `vercel-react-best-practices` | React 与 Next.js 性能优化指南(Vercel 工程团队出品):编写、评审或重构 React/Next.js 代码时使用,触发于 R… |

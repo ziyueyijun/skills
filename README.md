@@ -67,6 +67,7 @@ The CLI writes the skill into the project's `.agents/skills/` and symlinks it fo
 | `research` | Investigate a question against high-trust primary sources and capture th… |
 | `resolving-merge-conflicts` | Use when you need to resolve an in-progress git merge/rebase conflict. |
 | `setup-pre-commit` | Set up Husky pre-commit hooks with lint-staged (Prettier), type checking… |
+| `shadcn` | Manages shadcn components and projects — adding, searching, fixing, debu… |
 | `skill-creator` | Create new skills, modify and improve existing skills, and measure skill… |
 | `tdd` | Test-driven development. Use when the user wants to build features or fi… |
 | `vercel-react-best-practices` | React and Next.js performance optimization guidelines from Vercel Engine… |
