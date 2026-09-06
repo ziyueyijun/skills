@@ -62,6 +62,7 @@ The CLI writes the skill into the project's `.agents/skills/` and symlinks it fo
 | `find-skills` | Helps users discover and install agent skills when they ask questions li… |
 | `git-guardrails-claude-code` | Set up Claude Code hooks to block dangerous git commands (push, reset --… |
 | `grilling` | Grill the user relentlessly about a plan, decision, or idea. Use when th… |
+| `playwright-best-practices` | Use when writing Playwright tests, fixing flaky tests, debugging failure… |
 | `prototype` | Build a throwaway prototype to answer a design question. Use when the us… |
 | `research` | Investigate a question against high-trust primary sources and capture th… |
 | `resolving-merge-conflicts` | Use when you need to resolve an in-progress git merge/rebase conflict. |

@@ -62,6 +62,7 @@ CLI 会把技能写入项目的 `.agents/skills/`,并为 Claude Code 及其支�
 | `find-skills` | 帮助查找并安装开放 agent 技能生态中的技能:回答「有没有做 X 的技能」「帮我找 X 技能」等需求。 |
 | `git-guardrails-claude-code` | 为 Claude Code 配置 hooks,在危险 git 命令(push、reset --hard、clean、branch -D 等)执行… |
 | `grilling` | 对方案、决策、想法穷追不舍地提问以压力测试思路;grill-me、triage、wayfinder 等共用的底层原语。 |
+| `playwright-best-practices` | Playwright 测试全套最佳实践参考(currents.dev,57 篇):编写与调试测试、修复 flaky、locator 与断言、Pa… |
 | `prototype` | 做一次性原型回答设计问题:状态或逻辑用单个共享 HTML,UI 探索用可切换的多方案变体。 |
 | `research` | 以高信任一手来源调研问题,结论写成带引用的 Markdown 文件入库,可由后台 agent 执行。 |
 | `resolving-merge-conflicts` | 逐 hunk 解决进行中的 git merge/rebase 冲突,按意图回溯冲突双方源头,完成后收尾(不 abort)。 |

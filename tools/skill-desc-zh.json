@@ -28,5 +28,6 @@
   "to-tickets": "把计划、spec 或当前对话拆成一组「曳光弹」式 ticket,声明各自阻塞边,落到本地文件或追踪器。",
   "triage": "用状态机推动 issue 与外部 PR 走 triage 流程:分类、核验、必要时 grill、写出 agent 可执行的简报。",
   "wayfinder": "把超出单会话容量的大工程规划成共享的「决策 ticket 地图」,逐个解决直到路径清晰。",
-  "wizard": "生成交互式 bash 向导,引导人类完成只有他们能做的步骤:基础设施、凭据、CI 机密、陌生后台或一次性迁移。"
+  "wizard": "生成交互式 bash 向导,引导人类完成只有他们能做的步骤:基础设施、凭据、CI 机密、陌生后台或一次性迁移。",
+  "playwright-best-practices": "Playwright 测试全套最佳实践参考(currents.dev,57 篇):编写与调试测试、修复 flaky、locator 与断言、Page Object、fixtures、网络拦截与 mock、认证、可视化回归、可访问性、安全、性能、Electron 与浏览器扩展测试、CI/CD 配置;按当前任务查表取用,TypeScript 示例。"
 }
