@@ -1,0 +1,17 @@
+{
+  "env": {
+    "ANTHROPIC_AUTH_TOKEN": "PROXY_MANAGED",
+    "ANTHROPIC_BASE_URL": "http://127.0.0.1:15721",
+    "ANTHROPIC_DEFAULT_FABLE_MODEL": "claude-fable-5[1M]",
+    "ANTHROPIC_DEFAULT_FABLE_MODEL_NAME": "deepseek-flash",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-haiku-4-5",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL_NAME": "deepseek-flash",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-5[1M]",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL_NAME": "deepseek-flash",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-5[1M]",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL_NAME": "deepseek-flash",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "deepseek-flash[1M]"
+  },
+  "enabledPlugins": {},
+  "outputStyle": "Concise"
+}
