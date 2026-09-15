@@ -12,6 +12,6 @@
     "ANTHROPIC_DEFAULT_SONNET_MODEL_NAME": "deepseek-flash",
     "CLAUDE_CODE_SUBAGENT_MODEL": "deepseek-flash[1M]"
   },
-  "enabledPlugins": {},
+  "autoMemoryEnabled": false,
   "outputStyle": "Concise"
 }
