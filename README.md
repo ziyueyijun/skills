@@ -4,11 +4,9 @@
 
 ## 已有技能
 
-| 技能 | 用途 |
-| --- | --- |
-| [`skill-create`](skills/skill-create/SKILL.md) | 从需求创建新技能：对齐场景与角色、命名与描述、正文与冒烟测试，完成后交给 `skill-review` 做真实运行。 |
-| [`skill-review`](skills/skill-review/SKILL.md) | 审查、诊断与打磨已有技能：静态扫描、真实运行、问题清单，以及确认后的修复。 |
-| [`skill-shared`](skills/skill-shared/SKILL.md) | 前两个技能共用的编写标准（[STANDARD.md](skills/skill-shared/STANDARD.md)）：技能是什么、对齐、真实运行与修复。 |
+- [`skill-create`](skills/skill-create/SKILL.md) —— 创建新技能：对齐场景与角色、命名与描述、正文与冒烟测试，完成后交给 `skill-review` 做真实运行。
+- [`skill-review`](skills/skill-review/SKILL.md) —— 审查、诊断与打磨已有技能：静态扫描、真实运行、问题清单，以及确认后的修复。
+- [`skill-shared`](skills/skill-shared/SKILL.md) —— 前两个技能共用的编写标准（[STANDARD.md](skills/skill-shared/STANDARD.md)）：技能是什么、对齐、真实运行与修复。
 
 ## 安装
 
