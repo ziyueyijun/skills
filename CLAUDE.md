@@ -1,1 +1,1 @@
-When pushing to Git, review the changes made across the entire project and update the `README.md` and `README.en.md` files.
+When pushing to Git, review the changes made across the entire project and update the `README.md` file.

@@ -1,7 +1,5 @@
 # skills
 
-**简体中文** | [English](README.en.md)
-
 一组通用的 **Agent Skills**。每个技能是一个包含 `SKILL.md` 的目录 —— 一份简短的指令文件，引导 agent 在某个具体任务上按固定流程工作。格式可跨 agent 通用，适用于支持 skill 约定的一众 coding agent（Codex、Cursor、Claude Code、OpenCode 等）。
 
 ## 已有技能
